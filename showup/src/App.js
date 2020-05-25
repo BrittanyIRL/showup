@@ -1,10 +1,11 @@
-import React, { StrictMode } from "react";
+import React, { StrictMode, Suspense } from "react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Navigation } from "./views";
 import { routes } from "./routes";
 import theme from "./theme";
+import AppProvider from "./context/appProvider";
 
 export const GlobalStyle = createGlobalStyle`
 	*,
@@ -39,15 +40,16 @@ function App() {
 
       <StrictMode>
         <Router>
-          <div>
-            <Navigation />
-
-            <Switch>
-              {routes.map((route, i) => (
-                <RouteWithSubRoutes key={i} {...route} />
-              ))}
-            </Switch>
-          </div>
+          <AppProvider>
+            <Suspense>
+              <Navigation />
+              <Switch>
+                {routes.map((route, i) => (
+                  <RouteWithSubRoutes key={i} {...route} />
+                ))}
+              </Switch>
+            </Suspense>
+          </AppProvider>
         </Router>
       </StrictMode>
     </ThemeProvider>
