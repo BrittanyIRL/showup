@@ -1,11 +1,11 @@
 import React, { StrictMode, Suspense } from "react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
-import { Navigation } from "./views";
-import { routes } from "./routes";
+import { Navigation, Router } from "./views";
 import theme from "./theme";
 import AppProvider from "./context/appProvider";
+import AuthProvider from "./context/authProvider";
 
 export const GlobalStyle = createGlobalStyle`
 	*,
@@ -17,40 +17,22 @@ export const GlobalStyle = createGlobalStyle`
   
 `;
 
-// A special wrapper for <Route> that knows how to
-// handle "sub"-routes by passing them in a `routes`
-// prop to the component it renders.
-function RouteWithSubRoutes(route) {
-  return (
-    <Route
-      path={route.path}
-      exact={route.exact}
-      render={(props) => (
-        // pass the sub-routes down to keep nesting
-        <route.component {...props} routes={route.routes} />
-      )}
-    />
-  );
-}
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
 
       <StrictMode>
-        <Router>
-          <AppProvider>
-            <Suspense>
-              <Navigation />
-              <Switch>
-                {routes.map((route, i) => (
-                  <RouteWithSubRoutes key={i} {...route} />
-                ))}
-              </Switch>
-            </Suspense>
-          </AppProvider>
-        </Router>
+        <BrowserRouter>
+          <AuthProvider>
+            <AppProvider>
+              <Suspense>
+                <Router />
+                <Navigation />
+              </Suspense>
+            </AppProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </StrictMode>
     </ThemeProvider>
   );
