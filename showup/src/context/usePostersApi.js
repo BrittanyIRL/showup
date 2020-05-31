@@ -6,8 +6,8 @@ import posterReducer, {
 } from "../reducers/posters";
 import { getDatabaseRef } from "./useFirebase";
 
-function reshapePosterData(poster) {
-  return poster;
+function reshapePostersData(posters = []) {
+  return posters.map((poster) => poster);
 }
 
 export const usePostersApi = () => {
@@ -25,7 +25,7 @@ export const usePostersApi = () => {
 
       dispatch({
         type: POSTER_ACTION_TYPES.FETCH_POSTERS_SUCCESS,
-        payload: reshapePosterData(snapshot),
+        payload: snapshot.val(), // reshapePostersData(snapshot.val()),
       });
     } catch (err) {
       dispatch({

@@ -6,15 +6,14 @@ import usePostersApi from "./usePostersApi";
 export const AppContext = createContext({ state: {}, actions: {} });
 
 export default function AppProvider({ children }) {
-  const postersApi = usePostersApi();
+  const { state, api } = usePostersApi();
 
-  const value = useMemo(
-    () => ({
-      state: postersApi.state,
-      actions: postersApi.api,
-    }),
-    [postersApi]
-  );
+  const value = useMemo(() => {
+    return {
+      state,
+      actions: api,
+    };
+  }, [api, state]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
