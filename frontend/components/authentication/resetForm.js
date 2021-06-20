@@ -1,38 +1,35 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import React, { useCallback, useEffect, useState } from "react";
-import { CURRENT_USER_QUERY } from "./useUser";
+import React, { useCallback, useState } from "react";
 import { ErrorMessage } from "..";
-import { SIGNIN_MUTATION } from "./signIn";
-import { useRouter } from "next/router";
 
-const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION(
+const RESET_MUTATION = gql`
+  mutation RESET_MUTATION(
     $email: String!
-    $name: String!
+    $token: String!
     $password: String!
   ) {
-    createUser(data: { email: $email, name: $name, password: $password }) {
-      id
-      email
-      name
+    redeemUserPasswordResetToken(
+      email: $email
+      token: $token
+      password: $password
+    ) {
+      code
+      message
     }
   }
 `;
-export const SignUp = () => {
-  const router = useRouter();
+export const ResetForm = ({ token }) => {
   const [formValues, setFormValues] = useState({
-    name: "",
+    token,
     email: "",
     password: "",
   });
 
-  const [signUp, { data }] = useMutation(SIGNUP_MUTATION, {
+  const [resetPassword, { data, error }] = useMutation(RESET_MUTATION, {
     variables: formValues,
     // refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
-
-  const [signIn] = useMutation(SIGNIN_MUTATION);
 
   const updateInput = useCallback((event, updateKey) => {
     event.preventDefault();
@@ -43,46 +40,20 @@ export const SignUp = () => {
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    await signUp();
+    await resetPassword();
   }, []);
   console.log({ data });
 
-  const handleLogin = useCallback(async () => {
-    const res = await signIn({
-      variables: formValues,
-      refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    });
-
-    router.push("/contribute");
-  }, [formValues]);
-
-  useEffect(() => {
-    if (data?.createUser) {
-      handleLogin();
-    }
-  }, [data]);
-
-  const error =
-    data?.authenticateUserWithPassword?.code === "FAILURE"
-      ? data.authenticateUserWithPassword
-      : undefined;
+  const deepError = data?.redeemUserPasswordResetToken?.message
+    ? data.authenticateUserWithPassword
+    : undefined;
 
   console.log({ error });
   return (
     <div>
-      <h2>Sign Up</h2>{" "}
+      <h2>Reset Password</h2>{" "}
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>
-          <label htmlFor="name">Name</label>
-          <input
-            name="name"
-            id="name"
-            autoComplete="name"
-            type="text"
-            placeholder="Ramona Flowers"
-            value={formValues?.name || ""}
-            onChange={(e) => updateInput(e, "name")}
-          />
           <label htmlFor="email">Email</label>
           <input
             name="email"
@@ -103,7 +74,10 @@ export const SignUp = () => {
             onChange={(e) => updateInput(e, "password")}
           />
           <button>Sign up</button>
-          <ErrorMessage error={error} />
+          {data?.redeemUserPasswordResetToken === null && (
+            <p>Password reset. Login.</p>
+          )}
+          <ErrorMessage error={error || deepError} />
         </fieldset>
       </form>
     </div>

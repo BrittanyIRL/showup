@@ -9,13 +9,13 @@ export default function Navigation() {
       <Link href="/">basic shit</Link>
       {user && (
         <>
-          <Link href="/account">Account</Link>
+          <Link href="/contribute">Contribute</Link>
           <SignOut />
         </>
       )}
       {!user && (
         <>
-          <Link href="/contribute">Contribute</Link>
+          <Link href="/access">Access</Link>
         </>
       )}
     </>

@@ -8,6 +8,7 @@ import {
 import { User } from './schemas/User';
 import { Poster } from './schemas/Poster';
 import { PosterImage } from './schemas/PosterImage';
+import { sendPasswordResetEmail } from './library/mail';
 
 const databaseURL =
   process.env.DATABASE_URL;
@@ -25,6 +26,12 @@ const { withAuth } = createAuth({
     fields: ['name', 'email', 'password'],
     // TODO add roles
   },
+  passwordResetLink: {
+    async sendToken(args) {
+      console.log(args);
+      await sendPasswordResetEmail(args.token, args.identity)
+    }
+  }
 });
 export default withAuth(
   config({

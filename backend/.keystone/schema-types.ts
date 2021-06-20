@@ -418,6 +418,19 @@ export type CreateInitialUserInput = {
   readonly password?: Scalars['String'] | null;
 };
 
+export type PasswordResetRequestErrorCode =
+  | 'IDENTITY_NOT_FOUND'
+  | 'MULTIPLE_IDENTITY_MATCHES';
+
+export type PasswordResetRedemptionErrorCode =
+  | 'FAILURE'
+  | 'IDENTITY_NOT_FOUND'
+  | 'MULTIPLE_IDENTITY_MATCHES'
+  | 'TOKEN_NOT_SET'
+  | 'TOKEN_MISMATCH'
+  | 'TOKEN_EXPIRED'
+  | 'TOKEN_REDEEMED';
+
 export type KeystoneAdminUIFieldMetaCreateViewFieldMode = 'edit' | 'hidden';
 
 export type KeystoneAdminUIFieldMetaListViewFieldMode = 'read' | 'hidden';

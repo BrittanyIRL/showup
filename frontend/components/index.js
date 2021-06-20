@@ -2,6 +2,7 @@ export { Posters, ALL_POSTERS_QUERY } from "./posters";
 export {
   SignIn,
   SignUp,
+  ResetForm,
   RequestReset,
   SignOut,
   useUser,

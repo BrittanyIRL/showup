@@ -1,13 +1,16 @@
-import { SignIn, SignUp, RequestReset } from "../components";
-
-export default function Contribute() {
-  // todo differentiate between when to sign in or sign up
+export default function Account() {
   return (
-    <>
-      <p>Have something to share? </p>
-      <SignIn />
-      <SignUp />
-      <RequestReset />
-    </>
+    <div>
+      Inside Account - Display posters created by this user. Below poster
+      instances show 'edit' and 'delete'
+      <button
+        type="button"
+        onClick={() => {
+          console.log("todo, create new show");
+        }}
+      >
+        Add New Show
+      </button>
+    </div>
   );
 }
