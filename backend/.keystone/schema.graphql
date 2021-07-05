@@ -160,6 +160,10 @@ type Poster {
   venue: String
   supportingActs: String
   date: String
+  creator: String
+  createdDate: String
+  city: String
+  state: String
   image: PosterImage
 }
 
@@ -242,6 +246,78 @@ input PosterWhereInput {
   date_not_ends_with_i: String
   date_in: [String]
   date_not_in: [String]
+  creator: String
+  creator_not: String
+  creator_contains: String
+  creator_not_contains: String
+  creator_starts_with: String
+  creator_not_starts_with: String
+  creator_ends_with: String
+  creator_not_ends_with: String
+  creator_i: String
+  creator_not_i: String
+  creator_contains_i: String
+  creator_not_contains_i: String
+  creator_starts_with_i: String
+  creator_not_starts_with_i: String
+  creator_ends_with_i: String
+  creator_not_ends_with_i: String
+  creator_in: [String]
+  creator_not_in: [String]
+  createdDate: String
+  createdDate_not: String
+  createdDate_contains: String
+  createdDate_not_contains: String
+  createdDate_starts_with: String
+  createdDate_not_starts_with: String
+  createdDate_ends_with: String
+  createdDate_not_ends_with: String
+  createdDate_i: String
+  createdDate_not_i: String
+  createdDate_contains_i: String
+  createdDate_not_contains_i: String
+  createdDate_starts_with_i: String
+  createdDate_not_starts_with_i: String
+  createdDate_ends_with_i: String
+  createdDate_not_ends_with_i: String
+  createdDate_in: [String]
+  createdDate_not_in: [String]
+  city: String
+  city_not: String
+  city_contains: String
+  city_not_contains: String
+  city_starts_with: String
+  city_not_starts_with: String
+  city_ends_with: String
+  city_not_ends_with: String
+  city_i: String
+  city_not_i: String
+  city_contains_i: String
+  city_not_contains_i: String
+  city_starts_with_i: String
+  city_not_starts_with_i: String
+  city_ends_with_i: String
+  city_not_ends_with_i: String
+  city_in: [String]
+  city_not_in: [String]
+  state: String
+  state_not: String
+  state_contains: String
+  state_not_contains: String
+  state_starts_with: String
+  state_not_starts_with: String
+  state_ends_with: String
+  state_not_ends_with: String
+  state_i: String
+  state_not_i: String
+  state_contains_i: String
+  state_not_contains_i: String
+  state_starts_with_i: String
+  state_not_starts_with_i: String
+  state_ends_with_i: String
+  state_not_ends_with_i: String
+  state_in: [String]
+  state_not_in: [String]
   image: PosterImageWhereInput
   image_is_null: Boolean
 }
@@ -261,6 +337,14 @@ enum SortPostersBy {
   supportingActs_DESC
   date_ASC
   date_DESC
+  creator_ASC
+  creator_DESC
+  createdDate_ASC
+  createdDate_DESC
+  city_ASC
+  city_DESC
+  state_ASC
+  state_DESC
   image_ASC
   image_DESC
 }
@@ -270,6 +354,10 @@ input PosterUpdateInput {
   venue: String
   supportingActs: String
   date: String
+  creator: String
+  createdDate: String
+  city: String
+  state: String
   image: PosterImageRelateToOneInput
 }
 
@@ -283,6 +371,10 @@ input PosterCreateInput {
   venue: String
   supportingActs: String
   date: String
+  creator: String
+  createdDate: String
+  city: String
+  state: String
   image: PosterImageRelateToOneInput
 }
 

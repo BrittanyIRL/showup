@@ -1,16 +1,13 @@
+import Link from "next/link";
+import ContributorPosters from "../components/posters/contributorPosters";
+
 export default function Account() {
   return (
     <div>
       Inside Account - Display posters created by this user. Below poster
       instances show 'edit' and 'delete'
-      <button
-        type="button"
-        onClick={() => {
-          console.log("todo, create new show");
-        }}
-      >
-        Add New Show
-      </button>
+      <Link href="/add">Add new show</Link>
+      <ContributorPosters />
     </div>
   );
 }

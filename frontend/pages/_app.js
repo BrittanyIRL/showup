@@ -14,8 +14,10 @@ Router.events.on("routeChangeError", () => NProgress.done());
 
 const GlobalStyle = createGlobalStyle`
   * {
-    /* font-family: 'Courier Prime', monospace; */
     font-family: 'Montserrat', sans-serif;
+  }
+  h1 { 
+    font-family: 'Courier Prime', monospace;
   }
 `;
 

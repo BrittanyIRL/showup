@@ -244,6 +244,78 @@ export type PosterWhereInput = {
   readonly date_not_ends_with_i?: Scalars['String'] | null;
   readonly date_in?: ReadonlyArray<Scalars['String'] | null> | null;
   readonly date_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly creator?: Scalars['String'] | null;
+  readonly creator_not?: Scalars['String'] | null;
+  readonly creator_contains?: Scalars['String'] | null;
+  readonly creator_not_contains?: Scalars['String'] | null;
+  readonly creator_starts_with?: Scalars['String'] | null;
+  readonly creator_not_starts_with?: Scalars['String'] | null;
+  readonly creator_ends_with?: Scalars['String'] | null;
+  readonly creator_not_ends_with?: Scalars['String'] | null;
+  readonly creator_i?: Scalars['String'] | null;
+  readonly creator_not_i?: Scalars['String'] | null;
+  readonly creator_contains_i?: Scalars['String'] | null;
+  readonly creator_not_contains_i?: Scalars['String'] | null;
+  readonly creator_starts_with_i?: Scalars['String'] | null;
+  readonly creator_not_starts_with_i?: Scalars['String'] | null;
+  readonly creator_ends_with_i?: Scalars['String'] | null;
+  readonly creator_not_ends_with_i?: Scalars['String'] | null;
+  readonly creator_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly creator_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly createdDate?: Scalars['String'] | null;
+  readonly createdDate_not?: Scalars['String'] | null;
+  readonly createdDate_contains?: Scalars['String'] | null;
+  readonly createdDate_not_contains?: Scalars['String'] | null;
+  readonly createdDate_starts_with?: Scalars['String'] | null;
+  readonly createdDate_not_starts_with?: Scalars['String'] | null;
+  readonly createdDate_ends_with?: Scalars['String'] | null;
+  readonly createdDate_not_ends_with?: Scalars['String'] | null;
+  readonly createdDate_i?: Scalars['String'] | null;
+  readonly createdDate_not_i?: Scalars['String'] | null;
+  readonly createdDate_contains_i?: Scalars['String'] | null;
+  readonly createdDate_not_contains_i?: Scalars['String'] | null;
+  readonly createdDate_starts_with_i?: Scalars['String'] | null;
+  readonly createdDate_not_starts_with_i?: Scalars['String'] | null;
+  readonly createdDate_ends_with_i?: Scalars['String'] | null;
+  readonly createdDate_not_ends_with_i?: Scalars['String'] | null;
+  readonly createdDate_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly createdDate_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly city?: Scalars['String'] | null;
+  readonly city_not?: Scalars['String'] | null;
+  readonly city_contains?: Scalars['String'] | null;
+  readonly city_not_contains?: Scalars['String'] | null;
+  readonly city_starts_with?: Scalars['String'] | null;
+  readonly city_not_starts_with?: Scalars['String'] | null;
+  readonly city_ends_with?: Scalars['String'] | null;
+  readonly city_not_ends_with?: Scalars['String'] | null;
+  readonly city_i?: Scalars['String'] | null;
+  readonly city_not_i?: Scalars['String'] | null;
+  readonly city_contains_i?: Scalars['String'] | null;
+  readonly city_not_contains_i?: Scalars['String'] | null;
+  readonly city_starts_with_i?: Scalars['String'] | null;
+  readonly city_not_starts_with_i?: Scalars['String'] | null;
+  readonly city_ends_with_i?: Scalars['String'] | null;
+  readonly city_not_ends_with_i?: Scalars['String'] | null;
+  readonly city_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly city_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly state?: Scalars['String'] | null;
+  readonly state_not?: Scalars['String'] | null;
+  readonly state_contains?: Scalars['String'] | null;
+  readonly state_not_contains?: Scalars['String'] | null;
+  readonly state_starts_with?: Scalars['String'] | null;
+  readonly state_not_starts_with?: Scalars['String'] | null;
+  readonly state_ends_with?: Scalars['String'] | null;
+  readonly state_not_ends_with?: Scalars['String'] | null;
+  readonly state_i?: Scalars['String'] | null;
+  readonly state_not_i?: Scalars['String'] | null;
+  readonly state_contains_i?: Scalars['String'] | null;
+  readonly state_not_contains_i?: Scalars['String'] | null;
+  readonly state_starts_with_i?: Scalars['String'] | null;
+  readonly state_not_starts_with_i?: Scalars['String'] | null;
+  readonly state_ends_with_i?: Scalars['String'] | null;
+  readonly state_not_ends_with_i?: Scalars['String'] | null;
+  readonly state_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly state_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
   readonly image?: PosterImageWhereInput | null;
   readonly image_is_null?: Scalars['Boolean'] | null;
 };
@@ -263,6 +335,14 @@ export type SortPostersBy =
   | 'supportingActs_DESC'
   | 'date_ASC'
   | 'date_DESC'
+  | 'creator_ASC'
+  | 'creator_DESC'
+  | 'createdDate_ASC'
+  | 'createdDate_DESC'
+  | 'city_ASC'
+  | 'city_DESC'
+  | 'state_ASC'
+  | 'state_DESC'
   | 'image_ASC'
   | 'image_DESC';
 
@@ -271,6 +351,10 @@ export type PosterUpdateInput = {
   readonly venue?: Scalars['String'] | null;
   readonly supportingActs?: Scalars['String'] | null;
   readonly date?: Scalars['String'] | null;
+  readonly creator?: Scalars['String'] | null;
+  readonly createdDate?: Scalars['String'] | null;
+  readonly city?: Scalars['String'] | null;
+  readonly state?: Scalars['String'] | null;
   readonly image?: PosterImageRelateToOneInput | null;
 };
 
@@ -284,6 +368,10 @@ export type PosterCreateInput = {
   readonly venue?: Scalars['String'] | null;
   readonly supportingActs?: Scalars['String'] | null;
   readonly date?: Scalars['String'] | null;
+  readonly creator?: Scalars['String'] | null;
+  readonly createdDate?: Scalars['String'] | null;
+  readonly city?: Scalars['String'] | null;
+  readonly state?: Scalars['String'] | null;
   readonly image?: PosterImageRelateToOneInput | null;
 };
 
@@ -494,13 +582,27 @@ export type UserListFn = (
 
 export type PosterListTypeInfo = {
   key: 'Poster';
-  fields: 'id' | 'headliner' | 'venue' | 'supportingActs' | 'date' | 'image';
+  fields:
+    | 'id'
+    | 'headliner'
+    | 'venue'
+    | 'supportingActs'
+    | 'date'
+    | 'creator'
+    | 'createdDate'
+    | 'city'
+    | 'state'
+    | 'image';
   backing: {
     readonly id: string;
     readonly headliner?: string | null;
     readonly venue?: string | null;
     readonly supportingActs?: string | null;
     readonly date?: string | null;
+    readonly creator?: string | null;
+    readonly createdDate?: string | null;
+    readonly city?: string | null;
+    readonly state?: string | null;
     readonly image?: string | null;
   };
   inputs: {
