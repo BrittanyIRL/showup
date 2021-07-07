@@ -1,4 +1,4 @@
-import { relationship, text, timestamp } from '@keystone-next/fields';
+import { relationship, text } from '@keystone-next/fields';
 import { list } from '@keystone-next/keystone/schema';
 
 export const Poster = list({
@@ -7,9 +7,9 @@ export const Poster = list({
     headliner: text({ isRequired: true }),
     venue: text({ isRequired: true }),
     supportingActs: text(),
-    date: text(), //timestamp(),
+    date: text(),
     creator: text(),
-    createdDate: text(), // timestamp(),
+    createdDate: text(),
     city: text({ isRequired: true }),
     state: text({ isRequired: true }),
     image: relationship({

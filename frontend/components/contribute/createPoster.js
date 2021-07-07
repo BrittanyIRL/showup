@@ -1,11 +1,11 @@
 import { useMutation } from "@apollo/client";
+import { format } from "date-fns";
 import gql from "graphql-tag";
-import { useState } from "react";
-import { ALL_POSTERS_QUERY } from "../";
 import Router from "next/router";
 import useForm from "../hooks/useForm";
 import { useUser } from "../authentication";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
+import { useEffect } from "react";
 
 const CREATE_POSTER_MUTATION = gql`
   mutation CREATE_POSTER_MUTATION(
@@ -14,10 +14,10 @@ const CREATE_POSTER_MUTATION = gql`
     $image: Upload
     $altText: String
     $creator: String!
-    $createdDate: String
+    $createdDate: String!
     $city: String!
     $state: String!
-    $date: String
+    $date: String!
     $supportingActs: String!
   ) {
     createPoster(
@@ -34,12 +34,23 @@ const CREATE_POSTER_MUTATION = gql`
       }
     ) {
       id
+      headliner
+      venue
+      creator
+      createdDate
+      city
+      state
+      date
+      supportingActs
+      # image
+      # altText
     }
   }
 `;
 
 export default function CreatePoster() {
   const user = useUser();
+  const timestamp = format(new Date(), "yyyy-MM-dd");
 
   const { inputs, handleChange, resetForm } = useForm({
     image: "",
@@ -49,15 +60,32 @@ export default function CreatePoster() {
     venue: "Crocodile",
     city: "Cloud city",
     state: "CA",
-    createdDate: "todo because dates are always hard",
-    date: "todo because dates are always hard",
+    createdDate: timestamp,
+    date: null,
   });
 
   const [createPoster, { loading, error, data }] = useMutation(
     CREATE_POSTER_MUTATION,
     {
-      variables: { ...inputs, creator: user?.id },
-      refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY }],
+      variables: {
+        ...inputs,
+        date: format(new Date(inputs.date), "yyyy-MM-dd"),
+        creator: user?.id,
+      },
+      update(proxy, { data: { createPoster } }) {
+        console.log(proxy, proxy.readQuery);
+        try {
+          // why won't this find data?
+          const data = proxy.readQuery({
+            query: CONTRIBUTOR_POSTERS_QUERY,
+          });
+          console.log({ data });
+          data.posters.push(createPoster);
+          proxy.writeQuery({ query: CONTRIBUTOR_POSTERS_QUERY, data });
+        } catch (error) {
+          console.error(error);
+        }
+      },
     }
   );
   return (
@@ -136,15 +164,15 @@ export default function CreatePoster() {
           value={inputs.state}
           onChange={handleChange}
         />
-        {/* TODO this needs to get converted to a true date or YYY-MM-DD */}
-        {/* <label htmlFor="date">Date of Show</label>
+
+        <label htmlFor="date">Date of Show</label>
         <input
           name="date"
           id="date"
           type="date"
           value={inputs.date}
           onChange={handleChange}
-        /> */}
+        />
 
         <button>Add Show</button>
       </fieldset>

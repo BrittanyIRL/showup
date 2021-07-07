@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
+import { format } from "date-fns";
 import Router from "next/router";
 import React from "react";
 import useForm from "../hooks/useForm";
@@ -79,6 +80,7 @@ export default function EditPoster({ id = "696969" }) {
   ] = useMutation(UPDATE_POSTER_MUTATION, {
     variables: {
       ...inputs,
+      date: format(new Date(inputs.date), "yyyy-MM-dd"),
       id,
     },
     refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY }],
@@ -149,14 +151,14 @@ export default function EditPoster({ id = "696969" }) {
           onChange={handleChange}
         />
         {/* TODO this needs to get converted to a true date or YYY-MM-DD */}
-        {/* <label htmlFor="date">Date of Show</label>
-      <input
-        name="date"
-        id="date"
-        type="date"
-        value={inputs.date}
-        onChange={handleChange}
-      /> */}
+        <label htmlFor="date">Date of Show</label>
+        <input
+          name="date"
+          id="date"
+          type="date"
+          value={inputs.date}
+          onChange={handleChange}
+        />
 
         <button>Add Show</button>
       </fieldset>
