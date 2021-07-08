@@ -4,8 +4,8 @@ import gql from "graphql-tag";
 import Router from "next/router";
 import useForm from "../hooks/useForm";
 import { useUser } from "../authentication";
+import { ALL_POSTERS_QUERY } from "../posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
-import { useEffect } from "react";
 
 const CREATE_POSTER_MUTATION = gql`
   mutation CREATE_POSTER_MUTATION(
@@ -64,30 +64,33 @@ export default function CreatePoster() {
     date: null,
   });
 
-  const [createPoster, { loading, error, data }] = useMutation(
-    CREATE_POSTER_MUTATION,
-    {
-      variables: {
-        ...inputs,
-        date: format(new Date(inputs.date), "yyyy-MM-dd"),
-        creator: user?.id,
+  const [createPoster] = useMutation(CREATE_POSTER_MUTATION, {
+    variables: {
+      ...inputs,
+      date: format(new Date(inputs.date), "yyyy-MM-dd"),
+      creator: user?.id,
+    },
+    update(cache, { data: { createPoster } }) {
+      try {
+        const { allPosters } = cache.readQuery({
+          query: ALL_POSTERS_QUERY,
+        });
+
+        cache.writeQuery({
+          query: ALL_POSTERS_QUERY,
+          data: allPosters.concat([createPoster]),
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    refetchQueries: [
+      {
+        query: CONTRIBUTOR_POSTERS_QUERY,
+        variables: { userId: user?.id || null },
       },
-      update(proxy, { data: { createPoster } }) {
-        console.log(proxy, proxy.readQuery);
-        try {
-          // why won't this find data?
-          const data = proxy.readQuery({
-            query: CONTRIBUTOR_POSTERS_QUERY,
-          });
-          console.log({ data });
-          data.posters.push(createPoster);
-          proxy.writeQuery({ query: CONTRIBUTOR_POSTERS_QUERY, data });
-        } catch (error) {
-          console.error(error);
-        }
-      },
-    }
-  );
+    ],
+  });
   return (
     <form
       onSubmit={async (e) => {
