@@ -13,7 +13,6 @@ const REMOVE_POSTER_MUTATION = gql`
 `;
 
 export default function DeletePoster({ id }) {
-  console.log("poster id: ", { id });
   const [deletePoster, { loading }] = useMutation(REMOVE_POSTER_MUTATION, {
     variables: { id },
     refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY }],

@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
-import { format } from "date-fns";
 import Router from "next/router";
 import React from "react";
 import useForm from "../hooks/useForm";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
+import { useUser } from "..";
+import { findAndUpdate } from "../../lib/findAndUpdate";
 
 const SINGLE_POSTER_QUERY = gql`
   query SINGLE_POSTER_QUERY($id: ID!) {
@@ -59,6 +60,7 @@ const UPDATE_POSTER_MUTATION = gql`
 `;
 
 export default function EditPoster({ id = "696969" }) {
+  const user = useUser();
   const { data, error, loading } = useQuery(SINGLE_POSTER_QUERY, {
     variables: { id },
   });
@@ -80,10 +82,31 @@ export default function EditPoster({ id = "696969" }) {
   ] = useMutation(UPDATE_POSTER_MUTATION, {
     variables: {
       ...inputs,
-      date: format(new Date(inputs.date), "yyyy-MM-dd"),
       id,
     },
-    refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY }],
+    // todo  add optimistic update instead of refetch
+    update(cache, { data: { updatePoster } }) {
+      try {
+        const { allPosters } = cache.readQuery({
+          query: CONTRIBUTOR_POSTERS_QUERY,
+          variables: { userId: user?.id || null },
+        });
+        const updatedData = allPosters.map(findAndUpdate(id, updatePoster));
+        cache.writeQuery({
+          query: CONTRIBUTOR_POSTERS_QUERY,
+          data: updatedData,
+          variables: { userId: user?.id || null },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    refetchQueries: [
+      {
+        query: CONTRIBUTOR_POSTERS_QUERY,
+        variables: { userId: user?.id || null },
+      },
+    ],
   });
 
   if (error) return <p>whoops</p>;

@@ -70,6 +70,7 @@ export default function CreatePoster() {
       date: format(new Date(inputs.date), "yyyy-MM-dd"),
       creator: user?.id,
     },
+    //todo add optimistic update instead of refetch
     update(cache, { data: { createPoster } }) {
       try {
         const { allPosters } = cache.readQuery({
