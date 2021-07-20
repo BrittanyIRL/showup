@@ -84,29 +84,22 @@ export default function EditPoster({ id = "696969" }) {
       ...inputs,
       id,
     },
-    // todo  add optimistic update instead of refetch
     update(cache, { data: { updatePoster } }) {
       try {
         const { allPosters } = cache.readQuery({
           query: CONTRIBUTOR_POSTERS_QUERY,
-          variables: { userId: user?.id || null },
+          variables: { userId: user.id },
         });
         const updatedData = allPosters.map(findAndUpdate(id, updatePoster));
         cache.writeQuery({
           query: CONTRIBUTOR_POSTERS_QUERY,
-          data: updatedData,
-          variables: { userId: user?.id || null },
+          data: { allPosters: updatedData },
+          variables: { userId: user.id },
         });
       } catch (error) {
         console.log(error);
       }
     },
-    refetchQueries: [
-      {
-        query: CONTRIBUTOR_POSTERS_QUERY,
-        variables: { userId: user?.id || null },
-      },
-    ],
   });
 
   if (error) return <p>whoops</p>;
@@ -173,7 +166,6 @@ export default function EditPoster({ id = "696969" }) {
           value={inputs.state}
           onChange={handleChange}
         />
-        {/* TODO this needs to get converted to a true date or YYY-MM-DD */}
         <label htmlFor="date">Date of Show</label>
         <input
           name="date"

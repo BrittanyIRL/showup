@@ -68,29 +68,24 @@ export default function CreatePoster() {
     variables: {
       ...inputs,
       date: format(new Date(inputs.date), "yyyy-MM-dd"),
-      creator: user?.id,
+      creator: user.id,
     },
-    //todo add optimistic update instead of refetch
     update(cache, { data: { createPoster } }) {
       try {
         const { allPosters } = cache.readQuery({
-          query: ALL_POSTERS_QUERY,
+          query: CONTRIBUTOR_POSTERS_QUERY,
+          variables: { userId: user.id },
         });
 
         cache.writeQuery({
-          query: ALL_POSTERS_QUERY,
-          data: allPosters.concat([createPoster]),
+          query: CONTRIBUTOR_POSTERS_QUERY,
+          data: { allPosters: [...allPosters, createPoster] },
+          variables: { userId: user.id },
         });
       } catch (error) {
         console.error(error);
       }
     },
-    refetchQueries: [
-      {
-        query: CONTRIBUTOR_POSTERS_QUERY,
-        variables: { userId: user?.id || null },
-      },
-    ],
   });
   return (
     <form
