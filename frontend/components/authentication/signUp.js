@@ -25,6 +25,7 @@ export const SignUp = () => {
     name: "",
     email: "",
     password: "",
+    role: "admin",
   });
 
   const [signUp, { data }] = useMutation(SIGNUP_MUTATION, {
@@ -48,7 +49,7 @@ export const SignUp = () => {
   console.log({ data });
 
   const handleLogin = useCallback(async () => {
-    const res = await signIn({
+    await signIn({
       variables: formValues,
       refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });

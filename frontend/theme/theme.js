@@ -9,6 +9,10 @@ const colorPalette = {
 
 const theme = {
   colors: colorPalette,
+  fonts: {
+    body: "'Montserrat', sans-serif",
+    heading: "'Courier Prime', monospace",
+  },
 };
 
 export { theme };

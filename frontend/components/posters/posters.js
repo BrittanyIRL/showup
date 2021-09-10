@@ -28,5 +28,13 @@ export default function Posters() {
     return <p>{error}</p>;
   }
   console.log("data", { data });
-  return <div>more shit</div>;
+  return data.allPosters.map(
+    ({ id, headliner, date, venue, supportingActs }) => (
+      <div key={id}>
+        <p>
+          {headliner} {supportingActs}, {date} at {venue}
+        </p>
+      </div>
+    )
+  );
 }

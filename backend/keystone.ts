@@ -8,6 +8,7 @@ import {
 import { User } from './schemas/User';
 import { Poster } from './schemas/Poster';
 import { PosterImage } from './schemas/PosterImage';
+import { Role } from './schemas/Role';
 import { sendPasswordResetEmail } from './library/mail';
 
 const databaseURL =
@@ -50,6 +51,7 @@ export default withAuth(
       User,
       Poster,
       PosterImage,
+      Role,
     }),
     ui: {
       // only show ui if true

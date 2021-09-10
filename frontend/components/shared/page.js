@@ -4,7 +4,7 @@ export default function Page({ children }) {
   return (
     <div>
       <Header />
-      {children}!!!
+      {children}
     </div>
   );
 }

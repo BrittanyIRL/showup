@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import React, { useCallback, useState } from "react";
 import { CURRENT_USER_QUERY } from "./useUser";
 import { ErrorMessage } from "..";
+import { useRouter } from "next/router";
 
 export const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -22,6 +23,7 @@ export const SIGNIN_MUTATION = gql`
   }
 `;
 export const SignIn = () => {
+  const router = useRouter();
   const [formValues, setFormValues] = useState({ email: "", password: "" });
 
   const [signIn, { data }] = useMutation(SIGNIN_MUTATION, {
@@ -39,6 +41,8 @@ export const SignIn = () => {
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     await signIn();
+
+    router.push("/contribute");
   }, []);
   console.log({ data });
   const error =

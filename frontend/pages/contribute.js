@@ -1,13 +1,15 @@
 import Link from "next/link";
+import { useMemo } from "react";
+import { useUser } from "../components";
 import ContributorPosters from "../components/posters/contributorPosters";
+const rolesAllowedToContribute = ["admin", "verified"];
 
 export default function Account() {
-  return (
-    <div>
-      Inside Account - Display posters created by this user. Below poster
-      instances show 'edit' and 'delete'
-      <Link href="/add">Add new show</Link>
-      <ContributorPosters />
-    </div>
+  const user = useUser();
+
+  const isVerified = useMemo(
+    () => rolesAllowedToContribute.indexOf(user?.role?.name) > -1,
+    [user]
   );
+  return <ContributorPosters userId={user?.id} isVerified={isVerified} />;
 }

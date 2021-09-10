@@ -2,7 +2,24 @@ import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
+import styled from "styled-components";
 import { CURRENT_USER_QUERY } from "./useUser";
+
+const SignOutButton = styled.button`
+  padding: 0;
+  margin-right: 2rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.blue};
+  text-decoration: none;
+  border-bottom: ${({ theme }) => `2px dashed ${theme.colors.blue}`};
+  text-align: left;
+  display: inline;
+
+  &:hover {
+    font-style: italic;
+    border-bottom: ${({ theme }) => `2px dashed ${theme.colors.yellow}`};
+  }
+`;
 
 const SIGN_OUT_MUTATION = gql`
   mutation {
@@ -20,5 +37,5 @@ export const SignOut = () => {
     await signOut();
     router.push("/");
   });
-  return <button onClick={handleSignOut}>sign out </button>;
+  return <SignOutButton onClick={handleSignOut}>Sign out</SignOutButton>;
 };

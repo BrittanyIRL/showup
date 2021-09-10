@@ -30,6 +30,9 @@ export default function Home() {
           PosterImage: _allPosterImagesMeta {
             count
           }
+          Role: _allRolesMeta {
+            count
+          }
         }
       `}
     />
