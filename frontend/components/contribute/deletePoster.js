@@ -4,16 +4,6 @@ import { useCallback } from "react";
 import Router from "next/router";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
 import { useUser } from "..";
-import styled from "styled-components";
-
-const RemoveButton = styled.button`
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.red};
-  text-decoration: none;
-  border-bottom: ${({ theme }) => `2px dashed ${theme.colors.red}`};
-  cursor: pointer;
-  padding: 0;
-`;
 
 const REMOVE_POSTER_MUTATION = gql`
   mutation REMOVE_POSTER_MUTATION($id: ID!) {
@@ -57,8 +47,8 @@ export default function DeletePoster({ id }) {
   });
 
   return (
-    <RemoveButton onClick={handleDelete} disabled={loading}>
+    <button onClick={handleDelete} disabled={loading}>
       Remove
-    </RemoveButton>
+    </button>
   );
 }
