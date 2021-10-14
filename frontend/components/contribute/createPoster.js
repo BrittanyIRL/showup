@@ -1,6 +1,8 @@
 import { useMutation } from "@apollo/client";
+import { useCallback, useState } from "react";
 import { format } from "date-fns";
 import gql from "graphql-tag";
+import DatePicker from "react-datepicker";
 import Router from "next/router";
 import useForm from "../hooks/useForm";
 import { useUser } from "../authentication";
@@ -53,7 +55,7 @@ const CREATE_POSTER_MUTATION = gql`
 export default function CreatePoster() {
   const { user } = useUser();
   const timestamp = format(new Date(), "yyyy-MM-dd");
-
+  const [showDate, setShowDate] = useState(null);
   const { inputs, handleChange, resetForm } = useForm({
     image: "",
     altText: "",
@@ -64,13 +66,16 @@ export default function CreatePoster() {
     city: "",
     state: "",
     createdDate: timestamp,
-    date: null,
   });
+
+  const handleDateChange = useCallback((date) => {
+    setShowDate(date);
+  }, []);
 
   const [createPoster] = useMutation(CREATE_POSTER_MUTATION, {
     variables: {
       ...inputs,
-      date: format(new Date(inputs?.date), "yyyy-MM-dd"),
+      date: showDate,
       creator: user?.id,
     },
     refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
@@ -180,12 +185,12 @@ export default function CreatePoster() {
           />
 
           <label htmlFor="date">Date of Show</label>
-          <input
+          <DatePicker
             name="date"
             id="date"
-            type="date"
-            value={inputs.date}
-            onChange={handleChange}
+            autoComplete="none"
+            selected={showDate}
+            onChange={handleDateChange}
           />
 
           <button>Add Show</button>

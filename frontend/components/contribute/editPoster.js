@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import Router from "next/router";
-import React from "react";
+import { useCallback, useState } from "react";
+import DatePicker from "react-datepicker";
 import useForm from "../hooks/useForm";
 import { ALL_POSTERS_QUERY } from "../posters/posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
@@ -69,6 +70,8 @@ export default function EditPoster({ id }) {
   const { data, error, loading } = useQuery(SINGLE_POSTER_QUERY, {
     variables: { id },
   });
+  console.log(data.date);
+  const [showDate, setShowDate] = useState(data?.date);
 
   const { inputs, handleChange, resetForm } = useForm(
     data?.Poster || {
@@ -78,9 +81,12 @@ export default function EditPoster({ id }) {
       venue: "",
       city: "",
       state: "",
-      date: "",
     }
   );
+
+  const handleDateChange = useCallback((date) => {
+    setShowDate(date);
+  }, []);
 
   const [
     updatePoster,
@@ -88,6 +94,7 @@ export default function EditPoster({ id }) {
   ] = useMutation(UPDATE_POSTER_MUTATION, {
     variables: {
       ...inputs,
+      date: showDate,
       id,
     },
     refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
@@ -184,15 +191,15 @@ export default function EditPoster({ id }) {
             onChange={handleChange}
           />
           <label htmlFor="date">Date of Show</label>
-          <input
+          <DatePicker
             name="date"
             id="date"
-            type="date"
-            value={inputs.date}
-            onChange={handleChange}
+            autoComplete="none"
+            selected={showDate}
+            onChange={handleDateChange}
           />
 
-          <button>Add Show</button>
+          <button>Update Show</button>
         </fieldset>
       </form>
     </div>
