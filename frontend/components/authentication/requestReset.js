@@ -42,7 +42,7 @@ export const RequestReset = () => {
 
   console.log({ error });
   return (
-    <div>
+    <div className="form-container">
       <h2>Reset Password</h2>
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>

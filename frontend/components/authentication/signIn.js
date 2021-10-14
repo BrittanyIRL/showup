@@ -52,8 +52,8 @@ export const SignIn = () => {
 
   console.log({ error });
   return (
-    <div>
-      <h2>Sign In</h2>{" "}
+    <div className="form-container">
+      <h2 className="sr-only">Sign In</h2>
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>
           <label htmlFor="email">Email</label>

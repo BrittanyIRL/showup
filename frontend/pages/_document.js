@@ -14,18 +14,12 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en-US">
         <Head>
-          <>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link
-              rel="preconnect"
-              href="https://fonts.gstatic.com"
-              crossOrigin
-            />
-            <link
-              href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Montserrat:wght@400;800&display=swap"
-              rel="stylesheet"
-            />
-          </>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Faustina&family=Long+Cang&family=Rock+Salt&family=Sedgwick+Ave+Display&display=swap"
+            rel="stylesheet"
+          />
         </Head>
 
         <body>

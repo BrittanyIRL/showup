@@ -17,14 +17,18 @@ export default function Navigation() {
       {user && (
         <>
           <Link href="/" passHref>
-            <a isActive={asPath === "/"}>Main</a>
+            <a className="headerContent" isActive={asPath === "/"}>
+              Main
+            </a>
           </Link>
           <Link href="/contribute" passHref>
-            <a isActive={asPath === "/contribute"}>Contributions</a>
+            <a className="headerContent" isActive={asPath === "/contribute"}>
+              Contributions
+            </a>
           </Link>
           {isVerified && (
             <Link href="/add" passHref>
-              <a>Add New</a>
+              <a className="headerContent">Add New</a>
             </Link>
           )}
 
@@ -32,9 +36,18 @@ export default function Navigation() {
         </>
       )}
       {!user && (
-        <Link href="/access" passHref>
-          <a isActive={asPath === "/access"}>Access</a>
-        </Link>
+        <>
+          <Link href="/requestAccess" passHref>
+            <a className="headerContent" isActive={asPath === "/access"}>
+              Get Started
+            </a>
+          </Link>
+          <Link href="/access" passHref>
+            <a className="headerContent" isActive={asPath === "/access"}>
+              Access
+            </a>
+          </Link>
+        </>
       )}
     </nav>
   );

@@ -17,6 +17,7 @@ const SINGLE_POSTER_QUERY = gql`
       city
       state
       date
+      artist
       image {
         altText
         id
@@ -37,6 +38,7 @@ const UPDATE_POSTER_MUTATION = gql`
     $state: String!
     $date: String
     $id: ID!
+    $artist: String
   ) {
     updatePoster(
       id: $id
@@ -47,6 +49,7 @@ const UPDATE_POSTER_MUTATION = gql`
         city: $city
         state: $state
         date: $date
+        artist: $artist
       }
     ) {
       headliner
@@ -55,18 +58,22 @@ const UPDATE_POSTER_MUTATION = gql`
       city
       state
       date
+      artist
     }
   }
 `;
 
-export default function EditPoster({ id = "696969" }) {
+export default function EditPoster({ id }) {
   const user = useUser();
   const { data, error, loading } = useQuery(SINGLE_POSTER_QUERY, {
     variables: { id },
   });
 
+  console.log({ data });
+
   const { inputs, handleChange, resetForm } = useForm(
     data?.Poster || {
+      artist: "",
       headliner: "",
       supportingActs: "",
       venue: "",
@@ -106,77 +113,88 @@ export default function EditPoster({ id = "696969" }) {
   if (loading) return <p>loading...</p>;
 
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        await updatePoster();
+    <div className="form-container">
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await updatePoster();
 
-        Router.push({
-          pathname: `/contribute`,
-        });
+          Router.push({
+            pathname: `/contribute`,
+          });
 
-        resetForm();
-      }}
-    >
-      <fieldset>
-        <img src={data.Poster.image.image.publicUrlTransformed} />
-        <label htmlFor="headliner">Headliner</label>
-        <input
-          name="headliner"
-          id="headliner"
-          type="text"
-          placeholder="The Wyld Stalyns"
-          value={inputs.headliner}
-          onChange={handleChange}
-        />
-        <label htmlFor="supportingActs">Supporting Act</label>
-        <p>Enter artists with commas to add multiple</p>
-        <input
-          name="supportingActs"
-          id="supportingActs"
-          type="text"
-          placeholder="Dujour"
-          value={inputs.supportingActs}
-          onChange={handleChange}
-        />
-        <label htmlFor="venue">Venue</label>
-        <input
-          name="venue"
-          id="venue"
-          type="text"
-          placeholder="Valley Bar"
-          value={inputs.venue}
-          onChange={handleChange}
-        />
-        <label htmlFor="city">City</label>
-        <input
-          name="city"
-          id="city"
-          type="text"
-          placeholder="Phoenix"
-          value={inputs.city}
-          onChange={handleChange}
-        />
-        <label htmlFor="state">State</label>
-        <input
-          name="state"
-          id="state"
-          type="text"
-          placeholder="AZ"
-          value={inputs.state}
-          onChange={handleChange}
-        />
-        <label htmlFor="date">Date of Show</label>
-        <input
-          name="date"
-          id="date"
-          type="date"
-          value={inputs.date}
-          onChange={handleChange}
-        />
+          resetForm();
+        }}
+      >
+        <fieldset>
+          <img src={data.Poster.image.image.publicUrlTransformed} />
+          <label htmlFor="artist">Poster artist</label>
+          <input
+            name="artist"
+            id="artist"
+            type="text"
+            placeholder="Jane Lane"
+            value={inputs.artist}
+            onChange={handleChange}
+          />
+          <label htmlFor="headliner">Headliner</label>
+          <input
+            name="headliner"
+            id="headliner"
+            type="text"
+            placeholder="The Wyld Stalyns"
+            value={inputs.headliner}
+            onChange={handleChange}
+          />
+          <label htmlFor="supportingActs">Supporting Act</label>
+          <p>Enter artists with commas to add multiple</p>
+          <input
+            name="supportingActs"
+            id="supportingActs"
+            type="text"
+            placeholder="Dujour"
+            value={inputs.supportingActs}
+            onChange={handleChange}
+          />
+          <label htmlFor="venue">Venue</label>
+          <input
+            name="venue"
+            id="venue"
+            type="text"
+            placeholder="Valley Bar"
+            value={inputs.venue}
+            onChange={handleChange}
+          />
+          <label htmlFor="city">City</label>
+          <input
+            name="city"
+            id="city"
+            type="text"
+            placeholder="Phoenix"
+            value={inputs.city}
+            onChange={handleChange}
+          />
+          <label htmlFor="state">State</label>
+          <input
+            name="state"
+            id="state"
+            type="text"
+            placeholder="AZ"
+            value={inputs.state}
+            onChange={handleChange}
+          />
+          <label htmlFor="date">Date of Show</label>
+          <input
+            name="date"
+            id="date"
+            type="date"
+            value={inputs.date}
+            onChange={handleChange}
+          />
 
-        <button>Add Show</button>
-      </fieldset>
-    </form>
+          <button>Add Show</button>
+        </fieldset>
+      </form>
+    </div>
   );
 }

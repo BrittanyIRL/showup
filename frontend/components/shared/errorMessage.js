@@ -10,10 +10,14 @@ const ErrorMessage = ({ error }) => {
     error.networkError.result.errors.length
   ) {
     return error.networkError.result.errors.map((error, i) => (
-      <div key={i}>{error.message.replace("GraphQL error: ", "")}</div>
+      <p key={i} className="form-error">
+        {error.message.replace("GraphQL error: ", "")}
+      </p>
     ));
   }
-  return <>{error.message.replace("GraphQL error: ", "")}</>;
+  return (
+    <p className="form-error">{error.message.replace("GraphQL error: ", "")}</p>
+  );
 };
 
 ErrorMessage.defaultProps = {

@@ -38,16 +38,16 @@ export default function ContributorPosters({ isVerified, userId }) {
 
   console.log("data", { data });
   return (
-    <div>
+    <div className="contributor-grid">
       {data.allPosters.map((poster) => (
-        <div key={poster.id}>
-          <img src={poster.image.image.publicUrlTransformed} />
-          <p>
-            {poster.headliner} with {poster.supportingActs} at {poster.venue}
-            on {poster.date}
-          </p>
-
-          <div>
+        <div key={poster.id} className="contributor-grid-item">
+          <img
+            alt={`${poster.headliner} with ${poster.supportingActs} at ${poster.venue}
+          on ${poster.date}`}
+            className="contributor-grid-item-image"
+            src={poster.image.image.publicUrlTransformed}
+          />
+          <div className="contributor-grid-item-controls">
             <Link href={`/poster/${poster.id}`}>Edit</Link>
             <DeletePoster id={poster.id} />
           </div>

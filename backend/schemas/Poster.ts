@@ -7,11 +7,12 @@ export const Poster = list({
     headliner: text({ isRequired: true }),
     venue: text({ isRequired: true }),
     supportingActs: text(),
-    date: text(),
-    creator: text(),
-    createdDate: text(),
+    date: text({ isRequired: true }),
+    creator: text({ isRequired: true }),
+    createdDate: text({ isRequired: true }),
     city: text({ isRequired: true }),
     state: text({ isRequired: true }),
+    artist: text({ isRequired: true }),
     image: relationship({
       ref: 'PosterImage.poster',
       ui: {

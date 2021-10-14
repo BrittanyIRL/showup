@@ -11,6 +11,8 @@ type User {
   name: String
   email: String
   password_is_set: Boolean
+  affiliation: String
+  reason: String
   role: Role
   passwordResetToken_is_set: Boolean
   passwordResetIssuedAt: String
@@ -64,6 +66,42 @@ input UserWhereInput {
   email_in: [String]
   email_not_in: [String]
   password_is_set: Boolean
+  affiliation: String
+  affiliation_not: String
+  affiliation_contains: String
+  affiliation_not_contains: String
+  affiliation_starts_with: String
+  affiliation_not_starts_with: String
+  affiliation_ends_with: String
+  affiliation_not_ends_with: String
+  affiliation_i: String
+  affiliation_not_i: String
+  affiliation_contains_i: String
+  affiliation_not_contains_i: String
+  affiliation_starts_with_i: String
+  affiliation_not_starts_with_i: String
+  affiliation_ends_with_i: String
+  affiliation_not_ends_with_i: String
+  affiliation_in: [String]
+  affiliation_not_in: [String]
+  reason: String
+  reason_not: String
+  reason_contains: String
+  reason_not_contains: String
+  reason_starts_with: String
+  reason_not_starts_with: String
+  reason_ends_with: String
+  reason_not_ends_with: String
+  reason_i: String
+  reason_not_i: String
+  reason_contains_i: String
+  reason_not_contains_i: String
+  reason_starts_with_i: String
+  reason_not_starts_with_i: String
+  reason_ends_with_i: String
+  reason_not_ends_with_i: String
+  reason_in: [String]
+  reason_not_in: [String]
   role: RoleWhereInput
   role_is_null: Boolean
   passwordResetToken_is_set: Boolean
@@ -113,6 +151,10 @@ enum SortUsersBy {
   name_DESC
   email_ASC
   email_DESC
+  affiliation_ASC
+  affiliation_DESC
+  reason_ASC
+  reason_DESC
   role_ASC
   role_DESC
   passwordResetIssuedAt_ASC
@@ -129,6 +171,8 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  affiliation: String
+  reason: String
   role: RoleRelateToOneInput
   passwordResetToken: String
   passwordResetIssuedAt: String
@@ -147,6 +191,8 @@ input UserCreateInput {
   name: String
   email: String
   password: String
+  affiliation: String
+  reason: String
   role: RoleRelateToOneInput
   passwordResetToken: String
   passwordResetIssuedAt: String
@@ -178,6 +224,7 @@ type Poster {
   createdDate: String
   city: String
   state: String
+  artist: String
   image: PosterImage
 }
 
@@ -332,6 +379,24 @@ input PosterWhereInput {
   state_not_ends_with_i: String
   state_in: [String]
   state_not_in: [String]
+  artist: String
+  artist_not: String
+  artist_contains: String
+  artist_not_contains: String
+  artist_starts_with: String
+  artist_not_starts_with: String
+  artist_ends_with: String
+  artist_not_ends_with: String
+  artist_i: String
+  artist_not_i: String
+  artist_contains_i: String
+  artist_not_contains_i: String
+  artist_starts_with_i: String
+  artist_not_starts_with_i: String
+  artist_ends_with_i: String
+  artist_not_ends_with_i: String
+  artist_in: [String]
+  artist_not_in: [String]
   image: PosterImageWhereInput
   image_is_null: Boolean
 }
@@ -359,6 +424,8 @@ enum SortPostersBy {
   city_DESC
   state_ASC
   state_DESC
+  artist_ASC
+  artist_DESC
   image_ASC
   image_DESC
 }
@@ -372,6 +439,7 @@ input PosterUpdateInput {
   createdDate: String
   city: String
   state: String
+  artist: String
   image: PosterImageRelateToOneInput
 }
 
@@ -389,6 +457,7 @@ input PosterCreateInput {
   createdDate: String
   city: String
   state: String
+  artist: String
   image: PosterImageRelateToOneInput
 }
 

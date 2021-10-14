@@ -20,5 +20,9 @@ export const SignOut = () => {
     await signOut();
     router.push("/");
   });
-  return <button onClick={handleSignOut}>Sign out</button>;
+  return (
+    <button className="signOut" onClick={handleSignOut}>
+      Sign out
+    </button>
+  );
 };

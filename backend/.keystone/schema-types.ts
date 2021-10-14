@@ -58,6 +58,42 @@ export type UserWhereInput = {
   readonly email_in?: ReadonlyArray<Scalars['String'] | null> | null;
   readonly email_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
   readonly password_is_set?: Scalars['Boolean'] | null;
+  readonly affiliation?: Scalars['String'] | null;
+  readonly affiliation_not?: Scalars['String'] | null;
+  readonly affiliation_contains?: Scalars['String'] | null;
+  readonly affiliation_not_contains?: Scalars['String'] | null;
+  readonly affiliation_starts_with?: Scalars['String'] | null;
+  readonly affiliation_not_starts_with?: Scalars['String'] | null;
+  readonly affiliation_ends_with?: Scalars['String'] | null;
+  readonly affiliation_not_ends_with?: Scalars['String'] | null;
+  readonly affiliation_i?: Scalars['String'] | null;
+  readonly affiliation_not_i?: Scalars['String'] | null;
+  readonly affiliation_contains_i?: Scalars['String'] | null;
+  readonly affiliation_not_contains_i?: Scalars['String'] | null;
+  readonly affiliation_starts_with_i?: Scalars['String'] | null;
+  readonly affiliation_not_starts_with_i?: Scalars['String'] | null;
+  readonly affiliation_ends_with_i?: Scalars['String'] | null;
+  readonly affiliation_not_ends_with_i?: Scalars['String'] | null;
+  readonly affiliation_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly affiliation_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly reason?: Scalars['String'] | null;
+  readonly reason_not?: Scalars['String'] | null;
+  readonly reason_contains?: Scalars['String'] | null;
+  readonly reason_not_contains?: Scalars['String'] | null;
+  readonly reason_starts_with?: Scalars['String'] | null;
+  readonly reason_not_starts_with?: Scalars['String'] | null;
+  readonly reason_ends_with?: Scalars['String'] | null;
+  readonly reason_not_ends_with?: Scalars['String'] | null;
+  readonly reason_i?: Scalars['String'] | null;
+  readonly reason_not_i?: Scalars['String'] | null;
+  readonly reason_contains_i?: Scalars['String'] | null;
+  readonly reason_not_contains_i?: Scalars['String'] | null;
+  readonly reason_starts_with_i?: Scalars['String'] | null;
+  readonly reason_not_starts_with_i?: Scalars['String'] | null;
+  readonly reason_ends_with_i?: Scalars['String'] | null;
+  readonly reason_not_ends_with_i?: Scalars['String'] | null;
+  readonly reason_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly reason_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
   readonly role?: RoleWhereInput | null;
   readonly role_is_null?: Scalars['Boolean'] | null;
   readonly passwordResetToken_is_set?: Scalars['Boolean'] | null;
@@ -123,6 +159,10 @@ export type SortUsersBy =
   | 'name_DESC'
   | 'email_ASC'
   | 'email_DESC'
+  | 'affiliation_ASC'
+  | 'affiliation_DESC'
+  | 'reason_ASC'
+  | 'reason_DESC'
   | 'role_ASC'
   | 'role_DESC'
   | 'passwordResetIssuedAt_ASC'
@@ -138,6 +178,8 @@ export type UserUpdateInput = {
   readonly name?: Scalars['String'] | null;
   readonly email?: Scalars['String'] | null;
   readonly password?: Scalars['String'] | null;
+  readonly affiliation?: Scalars['String'] | null;
+  readonly reason?: Scalars['String'] | null;
   readonly role?: RoleRelateToOneInput | null;
   readonly passwordResetToken?: Scalars['String'] | null;
   readonly passwordResetIssuedAt?: Scalars['String'] | null;
@@ -156,6 +198,8 @@ export type UserCreateInput = {
   readonly name?: Scalars['String'] | null;
   readonly email?: Scalars['String'] | null;
   readonly password?: Scalars['String'] | null;
+  readonly affiliation?: Scalars['String'] | null;
+  readonly reason?: Scalars['String'] | null;
   readonly role?: RoleRelateToOneInput | null;
   readonly passwordResetToken?: Scalars['String'] | null;
   readonly passwordResetIssuedAt?: Scalars['String'] | null;
@@ -329,6 +373,24 @@ export type PosterWhereInput = {
   readonly state_not_ends_with_i?: Scalars['String'] | null;
   readonly state_in?: ReadonlyArray<Scalars['String'] | null> | null;
   readonly state_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly artist?: Scalars['String'] | null;
+  readonly artist_not?: Scalars['String'] | null;
+  readonly artist_contains?: Scalars['String'] | null;
+  readonly artist_not_contains?: Scalars['String'] | null;
+  readonly artist_starts_with?: Scalars['String'] | null;
+  readonly artist_not_starts_with?: Scalars['String'] | null;
+  readonly artist_ends_with?: Scalars['String'] | null;
+  readonly artist_not_ends_with?: Scalars['String'] | null;
+  readonly artist_i?: Scalars['String'] | null;
+  readonly artist_not_i?: Scalars['String'] | null;
+  readonly artist_contains_i?: Scalars['String'] | null;
+  readonly artist_not_contains_i?: Scalars['String'] | null;
+  readonly artist_starts_with_i?: Scalars['String'] | null;
+  readonly artist_not_starts_with_i?: Scalars['String'] | null;
+  readonly artist_ends_with_i?: Scalars['String'] | null;
+  readonly artist_not_ends_with_i?: Scalars['String'] | null;
+  readonly artist_in?: ReadonlyArray<Scalars['String'] | null> | null;
+  readonly artist_not_in?: ReadonlyArray<Scalars['String'] | null> | null;
   readonly image?: PosterImageWhereInput | null;
   readonly image_is_null?: Scalars['Boolean'] | null;
 };
@@ -356,6 +418,8 @@ export type SortPostersBy =
   | 'city_DESC'
   | 'state_ASC'
   | 'state_DESC'
+  | 'artist_ASC'
+  | 'artist_DESC'
   | 'image_ASC'
   | 'image_DESC';
 
@@ -368,6 +432,7 @@ export type PosterUpdateInput = {
   readonly createdDate?: Scalars['String'] | null;
   readonly city?: Scalars['String'] | null;
   readonly state?: Scalars['String'] | null;
+  readonly artist?: Scalars['String'] | null;
   readonly image?: PosterImageRelateToOneInput | null;
 };
 
@@ -385,6 +450,7 @@ export type PosterCreateInput = {
   readonly createdDate?: Scalars['String'] | null;
   readonly city?: Scalars['String'] | null;
   readonly state?: Scalars['String'] | null;
+  readonly artist?: Scalars['String'] | null;
   readonly image?: PosterImageRelateToOneInput | null;
 };
 
@@ -636,6 +702,8 @@ export type UserListTypeInfo = {
     | 'name'
     | 'email'
     | 'password'
+    | 'affiliation'
+    | 'reason'
     | 'role'
     | 'passwordResetToken'
     | 'passwordResetIssuedAt'
@@ -648,6 +716,8 @@ export type UserListTypeInfo = {
     readonly name?: string | null;
     readonly email?: string | null;
     readonly password?: string | null;
+    readonly affiliation?: string | null;
+    readonly reason?: string | null;
     readonly role?: string | null;
     readonly passwordResetToken?: string | null;
     readonly passwordResetIssuedAt?: Date | null;
@@ -693,6 +763,7 @@ export type PosterListTypeInfo = {
     | 'createdDate'
     | 'city'
     | 'state'
+    | 'artist'
     | 'image';
   backing: {
     readonly id: string;
@@ -704,6 +775,7 @@ export type PosterListTypeInfo = {
     readonly createdDate?: string | null;
     readonly city?: string | null;
     readonly state?: string | null;
+    readonly artist?: string | null;
     readonly image?: string | null;
   };
   inputs: {

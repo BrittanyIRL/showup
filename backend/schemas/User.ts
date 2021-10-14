@@ -8,6 +8,8 @@ export const User = list({
     name: text({ isRequired: true }),
     email: text({ isRequired: true, isUnique: true }),
     password: password(),
+    affiliation: text({ isRequired: true}),
+    reason: text({ isRequired: true}),
     role: relationship({
       ref: 'Role.assignedTo'
     })

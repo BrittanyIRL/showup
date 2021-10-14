@@ -13,12 +13,13 @@ const CREATE_POSTER_MUTATION = gql`
     $venue: String!
     $image: Upload
     $altText: String
+    $artist: String
     $creator: String!
     $createdDate: String!
     $city: String!
     $state: String!
     $date: String!
-    $supportingActs: String!
+    $supportingActs: String
   ) {
     createPoster(
       data: {
@@ -30,6 +31,7 @@ const CREATE_POSTER_MUTATION = gql`
         state: $state
         date: $date
         supportingActs: $supportingActs
+        artist: $artist
         image: { create: { image: $image, altText: $altText } }
       }
     ) {
@@ -54,12 +56,13 @@ export default function CreatePoster() {
 
   const { inputs, handleChange, resetForm } = useForm({
     image: "",
-    altText: "some alt text for poster",
-    headliner: "New Order",
-    supportingActs: "Pet Shop Boys",
-    venue: "Crocodile",
-    city: "Cloud city",
-    state: "CA",
+    altText: "",
+    artist: "",
+    headliner: "",
+    supportingActs: "",
+    venue: "",
+    city: "",
+    state: "",
     createdDate: timestamp,
     date: null,
   });
@@ -67,8 +70,8 @@ export default function CreatePoster() {
   const [createPoster] = useMutation(CREATE_POSTER_MUTATION, {
     variables: {
       ...inputs,
-      date: format(new Date(inputs.date), "yyyy-MM-dd"),
-      creator: user.id,
+      date: format(new Date(inputs?.date), "yyyy-MM-dd"),
+      creator: user?.id,
     },
     update(cache, { data: { createPoster } }) {
       try {
@@ -88,94 +91,105 @@ export default function CreatePoster() {
     },
   });
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        await createPoster();
-        Router.push({
-          pathname: `/contribute`,
-        });
+    <div className="form-container">
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await createPoster();
+          Router.push({
+            pathname: `/contribute`,
+          });
 
-        resetForm();
-      }}
-    >
-      <fieldset>
-        <label htmlFor="image">Poster</label>
-        <input
-          required
-          type="file"
-          id="image"
-          name="image"
-          onChange={handleChange}
-        />
-        <label htmlFor="altText">Poster Description</label>
-        <input
-          name="altText"
-          id="altText"
-          type="text"
-          placeholder="The Wyld Stalyns"
-          value={inputs.altText}
-          onChange={handleChange}
-        />
-        <label htmlFor="headliner">Headliner</label>
-        <input
-          name="headliner"
-          id="headliner"
-          type="text"
-          placeholder="The Wyld Stalyns"
-          value={inputs.headliner}
-          onChange={handleChange}
-        />
-        <label htmlFor="supportingActs">Supporting Act</label>
-        <p>Enter artists with commas to add multiple</p>
-        <input
-          name="supportingActs"
-          id="supportingActs"
-          type="text"
-          placeholder="Dujour"
-          value={inputs.supportingActs}
-          onChange={handleChange}
-        />
-        <label htmlFor="venue">Venue</label>
-        <input
-          name="venue"
-          id="venue"
-          type="text"
-          placeholder="Valley Bar"
-          value={inputs.venue}
-          onChange={handleChange}
-        />
-        <label htmlFor="city">City</label>
-        <input
-          name="city"
-          id="city"
-          type="text"
-          placeholder="Phoenix"
-          value={inputs.city}
-          onChange={handleChange}
-        />
-        <label htmlFor="state">State</label>
-        <input
-          name="state"
-          id="state"
-          type="text"
-          placeholder="AZ"
-          value={inputs.state}
-          onChange={handleChange}
-        />
+          resetForm();
+        }}
+      >
+        <fieldset>
+          <label htmlFor="image">Poster</label>
+          <input
+            required
+            type="file"
+            id="image"
+            name="image"
+            onChange={handleChange}
+          />
+          <label htmlFor="altText">Poster Description</label>
+          <input
+            name="altText"
+            id="altText"
+            type="text"
+            placeholder="The Wyld Stalyns"
+            value={inputs.altText}
+            onChange={handleChange}
+          />
+          <label htmlFor="artist">Who made this poster?</label>
+          <input
+            name="artist"
+            id="artist"
+            type="text"
+            placeholder="Jane Lane"
+            value={inputs.artist}
+            onChange={handleChange}
+          />
+          <label htmlFor="headliner">Headliner</label>
+          <input
+            name="headliner"
+            id="headliner"
+            type="text"
+            placeholder="The Wyld Stalyns"
+            value={inputs.headliner}
+            onChange={handleChange}
+          />
+          <label htmlFor="supportingActs">Supporting Act</label>
+          <p>Enter artists with commas to add multiple</p>
+          <input
+            name="supportingActs"
+            id="supportingActs"
+            type="text"
+            placeholder="Dujour"
+            value={inputs.supportingActs}
+            onChange={handleChange}
+          />
+          <label htmlFor="venue">Venue</label>
+          <input
+            name="venue"
+            id="venue"
+            type="text"
+            placeholder="Valley Bar"
+            value={inputs.venue}
+            onChange={handleChange}
+          />
+          <label htmlFor="city">City</label>
+          <input
+            name="city"
+            id="city"
+            type="text"
+            placeholder="Phoenix"
+            value={inputs.city}
+            onChange={handleChange}
+          />
+          <label htmlFor="state">State</label>
+          <input
+            name="state"
+            id="state"
+            type="text"
+            placeholder="AZ"
+            value={inputs.state}
+            onChange={handleChange}
+          />
 
-        <label htmlFor="date">Date of Show</label>
-        <input
-          name="date"
-          id="date"
-          type="date"
-          value={inputs.date}
-          onChange={handleChange}
-        />
+          <label htmlFor="date">Date of Show</label>
+          <input
+            name="date"
+            id="date"
+            type="date"
+            value={inputs.date}
+            onChange={handleChange}
+          />
 
-        <button>Add Show</button>
-      </fieldset>
-    </form>
+          <button>Add Show</button>
+        </fieldset>
+      </form>
+    </div>
   );
 }
 

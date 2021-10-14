@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CURRENT_USER_QUERY } from "./useUser";
 import { ErrorMessage } from "..";
 import { SIGNIN_MUTATION } from "./signIn";
@@ -8,12 +8,24 @@ import { useRouter } from "next/router";
 
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
+    $affiliation: String!
+    $reason: String!
     $email: String!
     $name: String!
     $password: String!
   ) {
-    createUser(data: { email: $email, name: $name, password: $password }) {
+    createUser(
+      data: {
+        affiliation: $affiliation
+        reason: $reason
+        email: $email
+        name: $name
+        password: $password
+      }
+    ) {
       id
+      affiliation
+      reason
       email
       name
     }
@@ -22,11 +34,18 @@ const SIGNUP_MUTATION = gql`
 export const SignUp = () => {
   const router = useRouter();
   const [formValues, setFormValues] = useState({
+    affiliation: "",
+    reason: "",
     name: "",
     email: "",
     password: "",
     role: "admin",
   });
+
+  const canSubmit = useMemo(
+    () => Object.values(formValues).every((val) => val.length > 4),
+    [formValues]
+  );
 
   const [signUp, { data }] = useMutation(SIGNUP_MUTATION, {
     variables: formValues,
@@ -46,18 +65,18 @@ export const SignUp = () => {
     event.preventDefault();
     await signUp();
   }, []);
-  console.log({ data });
 
   const handleLogin = useCallback(async () => {
-    await signIn({
+    const returnedSignin = await signIn({
       variables: formValues,
       refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });
-
+    console.log({ returnedSignin });
     router.push("/contribute");
   }, [formValues]);
 
   useEffect(() => {
+    console.log({ data });
     if (data?.createUser) {
       handleLogin();
     }
@@ -68,12 +87,32 @@ export const SignUp = () => {
       ? data.authenticateUserWithPassword
       : undefined;
 
-  console.log({ error });
   return (
-    <div>
+    <div className="form-container">
       <h2>Sign Up</h2>{" "}
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>
+          <label htmlFor="reason">What brings you here to contribute?</label>
+          <textarea
+            name="reason"
+            id="reason"
+            rows="5"
+            placeholder="Are you an artist or band member? Member of a street team or work at a venue? Basically, convince me you aren't a bot or a troll."
+            value={formValues?.reason || ""}
+            onChange={(e) => updateInput(e, "reason")}
+          />
+          <label htmlFor="affiliation">
+            If you're affiliated with a label, band, company, etc - please list
+            it here.
+          </label>
+          <input
+            name="affiliation"
+            id="affiliation"
+            type="text"
+            placeholder="Wyld Stalyns Street Team"
+            value={formValues?.affiliation || ""}
+            onChange={(e) => updateInput(e, "affiliation")}
+          />
           <label htmlFor="name">Name</label>
           <input
             name="name"
@@ -103,8 +142,10 @@ export const SignUp = () => {
             value={formValues?.password || ""}
             onChange={(e) => updateInput(e, "password")}
           />
-          <button>Sign up</button>
-          <ErrorMessage error={error} />
+          <button className="form-button" disabled={!canSubmit}>
+            Sign up
+          </button>
+          <ErrorMessage error={{ message: "i am error you fucked up" }} />
         </fieldset>
       </form>
     </div>
