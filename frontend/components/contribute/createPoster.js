@@ -75,7 +75,7 @@ export default function CreatePoster() {
   const [createPoster] = useMutation(CREATE_POSTER_MUTATION, {
     variables: {
       ...inputs,
-      date: showDate,
+      date: showDate?.toString(),
       creator: user?.id,
     },
     refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],

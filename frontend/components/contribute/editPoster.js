@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import Router from "next/router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import useForm from "../hooks/useForm";
 import { ALL_POSTERS_QUERY } from "../posters/posters";
@@ -70,8 +70,13 @@ export default function EditPoster({ id }) {
   const { data, error, loading } = useQuery(SINGLE_POSTER_QUERY, {
     variables: { id },
   });
-  console.log(data.date);
-  const [showDate, setShowDate] = useState(data?.date);
+  const [showDate, setShowDate] = useState();
+  useEffect(() => {
+    if (!showDate && !loading) {
+      const newDate = new Date(data?.Poster.date);
+      setShowDate(newDate);
+    }
+  }, [showDate, loading, data]);
 
   const { inputs, handleChange, resetForm } = useForm(
     data?.Poster || {
@@ -85,6 +90,7 @@ export default function EditPoster({ id }) {
   );
 
   const handleDateChange = useCallback((date) => {
+    console.log(date, typeof date, date.toString());
     setShowDate(date);
   }, []);
 
@@ -94,7 +100,7 @@ export default function EditPoster({ id }) {
   ] = useMutation(UPDATE_POSTER_MUTATION, {
     variables: {
       ...inputs,
-      date: showDate,
+      date: showDate?.toString(),
       id,
     },
     refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
