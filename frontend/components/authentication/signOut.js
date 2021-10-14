@@ -11,6 +11,7 @@ const SIGN_OUT_MUTATION = gql`
 `;
 export const SignOut = () => {
   const router = useRouter();
+  const { asPath } = useRouter();
   const [signOut] = useMutation(SIGN_OUT_MUTATION, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
@@ -18,7 +19,11 @@ export const SignOut = () => {
   const handleSignOut = useCallback(async (event) => {
     event.preventDefault();
     await signOut();
-    router.push("/");
+    if (asPath === "/") {
+      router.reload(window.location.pathname);
+    } else {
+      router.push("/");
+    }
   });
   return (
     <button className="signOut" onClick={handleSignOut}>
