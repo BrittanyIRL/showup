@@ -1,6 +1,12 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 export const ALL_POSTERS_QUERY = gql`
   query ALL_POSTERS_QUERY {
@@ -24,6 +30,8 @@ export default function Posters() {
   const { data, error, loading } = useQuery(ALL_POSTERS_QUERY);
   const gridRef = useRef();
   const gridItems = useRef({});
+  const itemCount = Object.values(gridItems?.current).length;
+  const [isGridLoaded, setIsGridLoaded] = useState(false);
 
   const resizeGridItem = useCallback((item) => {
     if (!gridRef.current) {
@@ -45,7 +53,7 @@ export default function Posters() {
   }, []);
 
   const resizeGridItems = useCallback(() => {
-    if (!gridItems.current) {
+    if (itemCount === 0) {
       return undefined;
     }
     Object.values(gridItems.current).map((item) => {
@@ -53,15 +61,20 @@ export default function Posters() {
     });
   }, [resizeGridItem]);
 
-  useLayoutEffect(() => {
-    if (!gridRef.current) {
-      return null;
+  useEffect(() => {
+    if (itemCount > 0) {
+      setIsGridLoaded(true);
     }
-    resizeGridItems();
-  }, [resizeGridItems]);
+  }, [itemCount, isGridLoaded]);
 
   useEffect(() => {
-    if (!gridRef?.current) {
+    if (isGridLoaded) {
+      resizeGridItems();
+    }
+  }, [resizeGridItems, isGridLoaded]);
+
+  useLayoutEffect(() => {
+    if (!gridRef?.current || !window) {
       return undefined;
     }
 
@@ -87,7 +100,7 @@ export default function Posters() {
   if (error) {
     return <p>{error}</p>;
   }
-  console.log("data", { data });
+
   return (
     <div className="main-grid" ref={gridRef}>
       {data.allPosters.map(
