@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import Link from "next/link";
+import { useUser } from "..";
 import DeletePoster from "../contribute/deletePoster";
 
 export const CONTRIBUTOR_POSTERS_QUERY = gql`
@@ -21,11 +22,12 @@ export const CONTRIBUTOR_POSTERS_QUERY = gql`
   }
 `;
 
-export default function ContributorPosters({ isVerified, userId }) {
+export default function ContributorPosters() {
+  const { user, isVerified } = useUser();
+
   const { data, error, loading } = useQuery(CONTRIBUTOR_POSTERS_QUERY, {
-    variables: { userId: userId || null },
+    variables: { userId: user?.id || null },
   });
-  console.log("??? ", { data });
   if (loading) {
     return <p>{loading}</p>;
   }
@@ -33,10 +35,33 @@ export default function ContributorPosters({ isVerified, userId }) {
     return <p>{error}</p>;
   }
   if (!isVerified) {
-    return <p>You're account is getting verified, please check back later.</p>;
+    return (
+      <div className="notification-wrapper">
+        <p>
+          You're account is getting verified - just like not everyone goes
+          around town distributing posters to coffee shops and stapling them to
+          street poles, not everyone needs to be adding things to this archive.
+          <br />
+          We appreciate your interest and promise to get back to you quickly.
+          <br />
+          <br /> Please check back later or wait for an email from us!
+        </p>
+      </div>
+    );
   }
 
-  console.log("data", { data });
+  if (isVerified && data.allPosters.length === 0) {
+    return (
+      <div className="notification-wrapper">
+        <p>
+          Account verified! Thanks for your patience. Your contributions will
+          show up here. Let's get started: <Link href="/add">add a poster</Link>
+          .
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="contributor-grid">
       {data.allPosters.map((poster) => (

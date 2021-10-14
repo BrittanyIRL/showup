@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { useMemo } from "react";
 
 const CURRENT_USER_QUERY = gql`
   query {
@@ -15,9 +16,20 @@ const CURRENT_USER_QUERY = gql`
   }
 `;
 
+const rolesAllowedToContribute = ["admin", "verified"];
+
 export function useUser() {
   const { data } = useQuery(CURRENT_USER_QUERY);
-  return data?.authenticatedItem;
+
+  return useMemo(
+    () => ({
+      user: data?.authenticatedItem,
+      isVerified:
+        rolesAllowedToContribute.indexOf(data?.authenticatedItem?.role?.name) >
+        -1,
+    }),
+    [data]
+  );
 }
 
 export { CURRENT_USER_QUERY };

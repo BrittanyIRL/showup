@@ -18,11 +18,13 @@ export const SignOut = () => {
 
   const handleSignOut = useCallback(async (event) => {
     event.preventDefault();
-    await signOut();
-    if (asPath === "/") {
-      router.reload(window.location.pathname);
-    } else {
-      router.push("/");
+    const returnedSignOut = await signOut();
+    if (returnedSignOut) {
+      if (asPath === "/") {
+        router.reload(window.location.pathname);
+      } else {
+        router.push("/");
+      }
     }
   });
   return (

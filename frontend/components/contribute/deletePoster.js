@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import { useCallback, useState } from "react";
 import Router from "next/router";
+import { ALL_POSTERS_QUERY } from "../posters/posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
 import { useUser } from "..";
 import { set } from "date-fns";
@@ -17,10 +18,11 @@ const REMOVE_POSTER_MUTATION = gql`
 export default function DeletePoster({ id }) {
   const [confirmationView, setConfirmationView] = useState(false);
 
-  const user = useUser();
+  const { user } = useUser();
 
   const [deletePoster, { loading }] = useMutation(REMOVE_POSTER_MUTATION, {
     variables: { id },
+    refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
     update(cache, { data: { updatePoster } }) {
       try {
         const { allPosters } = cache.readQuery({

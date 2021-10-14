@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ErrorMessage } from "..";
 
 const REQUEST_PASSWORD_RESET_MUTATION = gql`
@@ -16,7 +16,7 @@ export const RequestReset = () => {
     email: "",
   });
 
-  const [requestReset, { data }] = useMutation(
+  const [requestReset, { data, error }] = useMutation(
     REQUEST_PASSWORD_RESET_MUTATION,
     {
       variables: formValues,
@@ -34,13 +34,8 @@ export const RequestReset = () => {
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     const res = await requestReset();
-    console.log({ res });
   }, []);
-  console.log({ data });
 
-  const error = undefined;
-
-  console.log({ error });
   return (
     <div className="form-container">
       <h2>Reset Password</h2>

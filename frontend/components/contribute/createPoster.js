@@ -51,7 +51,7 @@ const CREATE_POSTER_MUTATION = gql`
 `;
 
 export default function CreatePoster() {
-  const user = useUser();
+  const { user } = useUser();
   const timestamp = format(new Date(), "yyyy-MM-dd");
 
   const { inputs, handleChange, resetForm } = useForm({
@@ -73,6 +73,7 @@ export default function CreatePoster() {
       date: format(new Date(inputs?.date), "yyyy-MM-dd"),
       creator: user?.id,
     },
+    refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
     update(cache, { data: { createPoster } }) {
       try {
         const { allPosters } = cache.readQuery({
@@ -90,6 +91,7 @@ export default function CreatePoster() {
       }
     },
   });
+
   return (
     <div className="form-container">
       <form

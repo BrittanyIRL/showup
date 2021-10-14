@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import React, { useCallback, useState } from "react";
-import { CURRENT_USER_QUERY } from "./useUser";
+import React, { useCallback, useLayoutEffect, useState } from "react";
+import { useUser, CURRENT_USER_QUERY } from "./useUser";
 import { ErrorMessage } from "..";
 import { useRouter } from "next/router";
 
@@ -24,6 +24,7 @@ export const SIGNIN_MUTATION = gql`
 `;
 export const SignIn = () => {
   const router = useRouter();
+  const { user } = useUser();
   const [formValues, setFormValues] = useState({ email: "", password: "" });
 
   const [signIn, { data }] = useMutation(SIGNIN_MUTATION, {
@@ -38,19 +39,25 @@ export const SignIn = () => {
     });
   }, []);
 
-  const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    await signIn();
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      await signIn();
+    },
+    [router]
+  );
 
-    router.push("/contribute");
-  }, []);
-  console.log({ data });
+  useLayoutEffect(() => {
+    if (user) {
+      router.push("/contribute");
+    }
+  }, [user]);
+
   const error =
     data?.authenticateUserWithPassword?.code === "FAILURE"
       ? data.authenticateUserWithPassword
       : undefined;
 
-  console.log({ error });
   return (
     <div className="form-container">
       <h2 className="sr-only">Sign In</h2>

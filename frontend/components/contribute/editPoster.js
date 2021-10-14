@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import Router from "next/router";
 import React from "react";
 import useForm from "../hooks/useForm";
+import { ALL_POSTERS_QUERY } from "../posters/posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
 import { useUser } from "..";
 import { findAndUpdate } from "../../lib/findAndUpdate";
@@ -64,12 +65,10 @@ const UPDATE_POSTER_MUTATION = gql`
 `;
 
 export default function EditPoster({ id }) {
-  const user = useUser();
+  const { user } = useUser();
   const { data, error, loading } = useQuery(SINGLE_POSTER_QUERY, {
     variables: { id },
   });
-
-  console.log({ data });
 
   const { inputs, handleChange, resetForm } = useForm(
     data?.Poster || {
@@ -91,6 +90,7 @@ export default function EditPoster({ id }) {
       ...inputs,
       id,
     },
+    refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
     update(cache, { data: { updatePoster } }) {
       try {
         const { allPosters } = cache.readQuery({

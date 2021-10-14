@@ -47,9 +47,10 @@ export const SignUp = () => {
     [formValues]
   );
 
-  const [signUp, { data }] = useMutation(SIGNUP_MUTATION, {
+  const [signUp, { data, error }] = useMutation(SIGNUP_MUTATION, {
     variables: formValues,
-    // refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    errorPolicy: "all",
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
 
   const [signIn] = useMutation(SIGNIN_MUTATION);
@@ -67,22 +68,24 @@ export const SignUp = () => {
   }, []);
 
   const handleLogin = useCallback(async () => {
-    const returnedSignin = await signIn({
+    const returnedSignIn = await signIn({
       variables: formValues,
       refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });
-    console.log({ returnedSignin });
-    router.push("/contribute");
+
+    if (returnedSignIn) {
+      router.push("/contribute");
+    }
   }, [formValues]);
 
   useEffect(() => {
-    console.log({ data });
     if (data?.createUser) {
       handleLogin();
     }
   }, [data]);
 
-  const error =
+  // TODO consolidate with other error up above
+  const error2 =
     data?.authenticateUserWithPassword?.code === "FAILURE"
       ? data.authenticateUserWithPassword
       : undefined;
@@ -145,7 +148,7 @@ export const SignUp = () => {
           <button className="form-button" disabled={!canSubmit}>
             Sign up
           </button>
-          <ErrorMessage error={{ message: "i am error you fucked up" }} />
+          <ErrorMessage error={error || error2} />
         </fieldset>
       </form>
     </div>

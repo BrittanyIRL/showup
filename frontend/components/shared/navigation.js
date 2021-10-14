@@ -1,17 +1,26 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useLayoutEffect } from "react";
 import { SignOut, useUser } from "../";
 
-const rolesAllowedToContribute = ["admin", "verified"];
+const protectedPaths = ["/add", "/contribute"];
 
 export default function Navigation() {
-  const user = useUser();
-  const isVerified = useMemo(
-    () => rolesAllowedToContribute.indexOf(user?.role?.name) > -1,
-    [user]
-  );
-  const { asPath } = useRouter();
+  const { user, isVerified } = useUser();
+
+  const router = useRouter();
+  const { asPath } = router;
+
+  // TODO this should happen server side but I'm a next js baby
+  // sometimes the login doesnt happen in time for this to get skipped so user goes to main
+  useLayoutEffect(() => {
+    if (!user && protectedPaths.indexOf(asPath) > -1) {
+      router.push("/");
+    } else if (!isVerified && asPath === "/add") {
+      router.push("/contribute");
+    }
+  }, [asPath, user, router]);
+
   return (
     <nav>
       {user && (
