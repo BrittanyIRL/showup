@@ -113,8 +113,14 @@ html {
   overflow-x: hidden;
   display: flex;
   flex-wrap: wrap;
+  background-color: var(--white);
 }
 
+.main-page {
+  padding-bottom: 8rem;
+  background-color: var(--wood);
+  background: linear-gradient(80deg, rgba(189,123,69,1) 0%, rgba(99,56,41,1) 50%, rgba(189,123,69,1) 100%);
+}
 /* Header */ 
 header {
   position: absolute;
@@ -423,4 +429,53 @@ fieldset > button {
   font-size: 3rem;
   border-bottom: 2px solid var(--neon-blue);
   margin-bottom: 2rem;
+}
+.svg-header-blob {
+  position: fixed;
+   bottom: -13rem;
+  right: -12rem;
+  height: 75%;
+  width: 50vw;
+  display: none;
+}
+.svg-header-blob path {
+  fill: var(--neon-pink);
+  opacity: 0.5;
+}
+
+.svg-header-container {
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 8rem;
+  right: 2rem;
+  height: 6rem;
+  width: 50vw;
+  max-width: 400px;
+}
+
+.svg-header-container svg {
+  display: inline;
+}
+.svg-header-container svg:first-of-type {
+  margin-top: -10rem;
+  width: 75%;
+}
+.svg-header-container svg:last-of-type {
+  margin-top: .75rem;
+  margin-left: 0;
+  width: 25%;
+}
+.svg-header-container #show {
+  fill: var(--maskingtape);
+  stroke: var(--sharpie);
+  width: 50%;
+  margin-right: 3rem;
+  font-size: 2rem;
+}
+
+.svg-header-container #up {
+  margin: 5rem 0 -10rem 0;
+  fill: var(--painterstape);
+  stroke: var(--sharpie);
 }
