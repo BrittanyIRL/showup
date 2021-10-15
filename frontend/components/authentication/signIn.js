@@ -1,7 +1,8 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import React, { useCallback, useLayoutEffect, useState } from "react";
-import { useUser, CURRENT_USER_QUERY } from "./useUser";
+import { useForm } from "react-hook-form";
+import React, { useCallback, useEffect, useState } from "react";
+import { CURRENT_USER_QUERY } from "./useUser";
 import { ErrorMessage } from "..";
 import { useRouter } from "next/router";
 
@@ -24,36 +25,32 @@ export const SIGNIN_MUTATION = gql`
 `;
 export const SignIn = () => {
   const router = useRouter();
-  const { user } = useUser();
-  const [formValues, setFormValues] = useState({ email: "", password: "" });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const [signIn, { data }] = useMutation(SIGNIN_MUTATION, {
-    variables: formValues,
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-  });
+  const [signIn, { data, error }] = useMutation(SIGNIN_MUTATION);
 
-  const updateInput = useCallback((event, updateKey) => {
-    event.preventDefault();
-    setFormValues((existingValues) => {
-      return { ...existingValues, [updateKey]: event.target.value };
-    });
-  }, []);
-
-  const handleSubmit = useCallback(
-    async (event) => {
-      event.preventDefault();
-      await signIn();
+  const onSubmit = useCallback(
+    async (data) => {
+      await signIn({
+        variables: { ...data },
+        refetchQueries: [{ query: CURRENT_USER_QUERY }],
+        errorPolicy: "all",
+      });
     },
-    [router]
+    [CURRENT_USER_QUERY, signIn]
   );
 
-  useLayoutEffect(() => {
-    if (user) {
+  useEffect(() => {
+    if (data?.authenticateUserWithPassword) {
       router.push("/contribute");
     }
-  }, [user]);
+  }, [data]);
 
-  const error =
+  const error2 =
     data?.authenticateUserWithPassword?.code === "FAILURE"
       ? data.authenticateUserWithPassword
       : undefined;
@@ -61,34 +58,33 @@ export const SignIn = () => {
   return (
     <div>
       <h2 className="sr-only">Sign In</h2>
-      <form method="POST" onSubmit={handleSubmit}>
+      <form method="POST" onSubmit={handleSubmit(onSubmit)}>
         <fieldset>
           <div>
             <label htmlFor="email">Email</label>
             <input
-              name="email"
-              id="email"
-              autoComplete="email"
-              type="text"
               placeholder="ramona.flowers77@gmail.com"
-              value={formValues?.email || ""}
-              onChange={(e) => updateInput(e, "email")}
+              {...register("email", { required: true, minLength: 8 })}
             />
+            {errors.email && <span>This feels obvious...</span>}
           </div>
           <div>
             <label htmlFor="password">Password</label>
             <input
-              name="password"
-              id="password"
               type="password"
               placeholder="holdontoyourbutts"
-              value={formValues?.password || ""}
-              onChange={(e) => updateInput(e, "password")}
+              {...register("password", { required: true, minLength: 8 })}
             />
+            {errors.password && (
+              <span>
+                If you forgot, you can reset it by clicking "reset password" to
+                your left.
+              </span>
+            )}
           </div>
 
           <button>Sign in</button>
-          <ErrorMessage error={error} />
+          <ErrorMessage error={error || error2} />
         </fieldset>
       </form>
     </div>

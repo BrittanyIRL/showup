@@ -2,11 +2,10 @@ import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import Router from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import useForm from "../hooks/useForm";
+import { useForm } from "react-hook-form";
 import { ALL_POSTERS_QUERY } from "../posters/posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
 import { useUser } from "..";
-import { findAndUpdate } from "../../lib/findAndUpdate";
 import DatePickerInput from "../shared/datePickerInput";
 
 const SINGLE_POSTER_QUERY = gql`
@@ -61,6 +60,7 @@ const UPDATE_POSTER_MUTATION = gql`
       state
       date
       artist
+      id
     }
   }
 `;
@@ -71,6 +71,13 @@ export default function EditPoster({ id }) {
     variables: { id },
   });
   const [showDate, setShowDate] = useState();
+  const [customErrors, setCustomErrors] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   useEffect(() => {
     if (!showDate && !loading) {
       const newDate = new Date(data?.Poster.date);
@@ -78,49 +85,43 @@ export default function EditPoster({ id }) {
     }
   }, [showDate, loading, data]);
 
-  const { inputs, handleChange, resetForm } = useForm(
-    data?.Poster || {
-      artist: "",
-      headliner: "",
-      supportingActs: "",
-      venue: "",
-      city: "",
-      state: "",
-    }
-  );
-
   const handleDateChange = useCallback((date) => {
-    console.log(date, typeof date, date.toString());
     setShowDate(date);
+    setCustomErrors((existing) => ({ ...existing, showDate: undefined }));
   }, []);
 
   const [
     updatePoster,
     { error: updateError, loading: updateLoading },
-  ] = useMutation(UPDATE_POSTER_MUTATION, {
-    variables: {
-      ...inputs,
-      date: showDate?.toString(),
-      id,
-    },
-    refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
-    update(cache, { data: { updatePoster } }) {
-      try {
-        const { allPosters } = cache.readQuery({
-          query: CONTRIBUTOR_POSTERS_QUERY,
-          variables: { userId: user.id },
-        });
-        const updatedData = allPosters.map(findAndUpdate(id, updatePoster));
-        cache.writeQuery({
-          query: CONTRIBUTOR_POSTERS_QUERY,
-          data: { allPosters: updatedData },
-          variables: { userId: user.id },
-        });
-      } catch (error) {
-        console.log(error);
+  ] = useMutation(UPDATE_POSTER_MUTATION, {});
+
+  const onSubmit = useCallback(
+    async (data) => {
+      if (!showDate) {
+        setCustomErrors((existing) => ({
+          ...existing,
+          showDate: "Please add a valid date",
+        }));
+        return;
       }
+
+      const posterData = {
+        ...data,
+        date: showDate.toString(),
+        id,
+      };
+      await updatePoster({
+        variables: { ...posterData },
+        refetchQueries: [
+          { query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY },
+        ],
+      });
+      Router.push({
+        pathname: `/contribute`,
+      });
     },
-  });
+    [showDate, Router, CONTRIBUTOR_POSTERS_QUERY, updatePoster, id, user]
+  );
 
   if (error) return <p>whoops</p>;
   if (loading) return <p>loading...</p>;
@@ -128,18 +129,7 @@ export default function EditPoster({ id }) {
   return (
     <div>
       <h2 className="form-title">Update poster</h2>{" "}
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          await updatePoster();
-
-          Router.push({
-            pathname: `/contribute`,
-          });
-
-          resetForm();
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="edit-image">
           <img src={data.Poster.image.image.publicUrlTransformed} />
         </div>
@@ -147,69 +137,70 @@ export default function EditPoster({ id }) {
           <div>
             <label htmlFor="artist">Poster artist</label>
             <input
-              name="artist"
-              id="artist"
-              type="text"
               placeholder="Jane Lane"
-              value={inputs.artist}
-              onChange={handleChange}
+              defaultValue={data?.Poster?.artist}
+              {...register("artist", { required: true, minLength: 3 })}
             />
+            {errors.artist && <span>Gotta give credit where it's due!</span>}
           </div>
           <div>
             <label htmlFor="headliner">Headliner</label>
             <input
-              name="headliner"
-              id="headliner"
-              type="text"
+              defaultValue={data?.Poster?.headliner}
               placeholder="The Wyld Stalyns"
-              value={inputs.headliner}
-              onChange={handleChange}
+              {...register("headliner", { required: true, minLength: 3 })}
             />
+            {errors.headliner && (
+              <span>This is the main act of the event.</span>
+            )}
           </div>
           <div>
             <label htmlFor="supportingActs">Supporting Act</label>
             <input
-              name="supportingActs"
-              id="supportingActs"
-              type="text"
               placeholder="Dujour"
-              value={inputs.supportingActs}
-              onChange={handleChange}
+              defaultValue={data?.Poster?.supportingActs}
+              {...register("supportingActs")}
             />
             <p>Enter artists with commas to add multiple</p>
           </div>
           <div>
             <label htmlFor="venue">Venue</label>
             <input
-              name="venue"
-              id="venue"
-              type="text"
-              placeholder="Valley Bar"
-              value={inputs.venue}
-              onChange={handleChange}
+              defaultValue={data?.Poster?.venue}
+              placeholder="Cantina"
+              {...register("venue", { required: true, minLength: 3 })}
             />
+            {errors.venue && <span>Please add the place this show is at.</span>}
           </div>
           <div>
             <label htmlFor="city">City</label>
             <input
-              name="city"
-              id="city"
-              type="text"
-              placeholder="Phoenix"
-              value={inputs.city}
-              onChange={handleChange}
+              defaultValue={data?.Poster?.city}
+              placeholder="Mos Eisley"
+              {...register("city", { required: true, minLength: 3 })}
             />
+            {errors.city && (
+              <span>
+                Please add the city (or nearest city) this event occurs.
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="state">State</label>
             <input
-              name="state"
-              id="state"
-              type="text"
               placeholder="AZ"
-              value={inputs.state}
-              onChange={handleChange}
+              defaultValue={data?.Poster?.state}
+              {...register("state", {
+                required: true,
+                minLength: 2,
+                maxLength: 2,
+              })}
             />
+            {errors.state && (
+              <span>
+                Please add the city (or nearest city) this event occurs.
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="date">Date of Show</label>
@@ -217,6 +208,7 @@ export default function EditPoster({ id }) {
               value={showDate}
               handleDateChange={handleDateChange}
             />
+            {customErrors.showDate && <span>{customErrors.showDate}</span>}
           </div>
           <button>Update Show</button>
         </fieldset>

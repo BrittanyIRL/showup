@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import React, { useCallback, useState } from "react";
+import { useForm } from "react-hook-form";
+import React, { useCallback } from "react";
 import { ErrorMessage } from "..";
 
 const REQUEST_PASSWORD_RESET_MUTATION = gql`
@@ -12,46 +13,39 @@ const REQUEST_PASSWORD_RESET_MUTATION = gql`
   }
 `;
 export const RequestReset = () => {
-  const [formValues, setFormValues] = useState({
-    email: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const [requestReset, { data, error }] = useMutation(
-    REQUEST_PASSWORD_RESET_MUTATION,
-    {
-      variables: formValues,
-      // refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    }
+    REQUEST_PASSWORD_RESET_MUTATION
   );
 
-  const updateInput = useCallback((event, updateKey) => {
-    event.preventDefault();
-    setFormValues((existingValues) => {
-      return { ...existingValues, [updateKey]: event.target.value };
-    });
-  }, []);
-
-  const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    const res = await requestReset();
-  }, []);
+  const onSubmit = useCallback(
+    async (data) => {
+      await requestReset({
+        variables: { ...data },
+      });
+    },
+    [requestReset]
+  );
 
   return (
     <div className="full-length-rows">
       <h2 className="form-title">Update Password</h2>
-      <form method="POST" onSubmit={handleSubmit}>
+      <form method="POST" onSubmit={handleSubmit(onSubmit)}>
         <fieldset>
           <div>
             <label htmlFor="name">Email</label>
             <input
-              name="email"
-              id="email"
-              autoComplete="email"
-              type="text"
               placeholder="ramona.flowers77@gmail.com"
-              value={formValues?.email || ""}
-              onChange={(e) => updateInput(e, "email")}
+              {...register("email", { required: true })}
             />
+            {errors.email && (
+              <span>We need your email to send you a password reset.</span>
+            )}
           </div>
           <div>
             <button>Reset Password</button>

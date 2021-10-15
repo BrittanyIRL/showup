@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
+import { useForm } from "react-hook-form";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CURRENT_USER_QUERY } from "./useUser";
 import { ErrorMessage } from "..";
-import { SIGNIN_MUTATION } from "./signIn";
 import { useRouter } from "next/router";
 
 const SIGNUP_MUTATION = gql`
@@ -33,54 +33,28 @@ const SIGNUP_MUTATION = gql`
 `;
 export const SignUp = () => {
   const router = useRouter();
-  const [formValues, setFormValues] = useState({
-    affiliation: "",
-    reason: "",
-    name: "",
-    email: "",
-    password: "",
-    role: "admin",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const canSubmit = useMemo(
-    () => Object.values(formValues).every((val) => val.length > 4),
-    [formValues]
+  const [signUp, { data, error }] = useMutation(SIGNUP_MUTATION);
+
+  const onSubmit = useCallback(
+    async (data) => {
+      await signUp({
+        variables: { ...data },
+        errorPolicy: "all",
+        refetchQueries: [{ query: CURRENT_USER_QUERY }],
+      });
+    },
+    [signUp, CURRENT_USER_QUERY]
   );
-
-  const [signUp, { data, error }] = useMutation(SIGNUP_MUTATION, {
-    variables: formValues,
-    errorPolicy: "all",
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-  });
-
-  const [signIn] = useMutation(SIGNIN_MUTATION);
-
-  const updateInput = useCallback((event, updateKey) => {
-    event.preventDefault();
-    setFormValues((existingValues) => {
-      return { ...existingValues, [updateKey]: event.target.value };
-    });
-  }, []);
-
-  const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    await signUp();
-  }, []);
-
-  const handleLogin = useCallback(async () => {
-    const returnedSignIn = await signIn({
-      variables: formValues,
-      refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    });
-
-    if (returnedSignIn) {
-      router.push("/contribute");
-    }
-  }, [formValues]);
 
   useEffect(() => {
     if (data?.createUser) {
-      handleLogin();
+      router.push("/access");
     }
   }, [data]);
 
@@ -93,18 +67,21 @@ export const SignUp = () => {
   return (
     <div>
       <h2 className="form-title">Sign Up</h2>{" "}
-      <form method="POST" onSubmit={handleSubmit}>
+      <form method="POST" onSubmit={handleSubmit(onSubmit)}>
         <fieldset>
           <div>
             <label htmlFor="reason">What brings you here to contribute?</label>
             <textarea
-              name="reason"
-              id="reason"
               rows="5"
               placeholder="Are you an artist or band member? Member of a street team or work at a venue? Basically, convince me you aren't a bot or a troll."
-              value={formValues?.reason || ""}
-              onChange={(e) => updateInput(e, "reason")}
+              {...register("reason", { required: true, minLength: 8 })}
             />
+            {errors.reason && (
+              <span>
+                This helps me figure out who is using this tool and who to reach
+                out to.
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="affiliation">
@@ -112,52 +89,42 @@ export const SignUp = () => {
               list it here.
             </label>
             <input
-              name="affiliation"
-              id="affiliation"
-              type="text"
               placeholder="Wyld Stalyns Street Team"
-              value={formValues?.affiliation || ""}
-              onChange={(e) => updateInput(e, "affiliation")}
+              {...register("affiliation", { required: true })}
             />
+            {errors.reason && (
+              <span>
+                Please include this, it helps me know you're legit. If it
+                doesn't apply to you - use this field to say why.
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="name">Name</label>
             <input
-              name="name"
-              id="name"
-              autoComplete="name"
-              type="text"
               placeholder="Ramona Flowers"
-              value={formValues?.name || ""}
-              onChange={(e) => updateInput(e, "name")}
+              {...register("name", { required: true })}
             />
+            {errors.name && <span>This feels obvious...</span>}
           </div>
           <div>
             <label htmlFor="email">Email</label>
             <input
-              name="email"
-              id="email"
-              autoComplete="email"
-              type="text"
               placeholder="ramona.flowers77@gmail.com"
-              value={formValues?.email || ""}
-              onChange={(e) => updateInput(e, "email")}
+              {...register("email", { required: true, minLength: 8 })}
             />
+            {errors.email && <span>This feels obvious...</span>}
           </div>
           <div>
             <label htmlFor="password">Password</label>
             <input
-              name="password"
-              id="password"
               type="password"
               placeholder="holdontoyourbutts"
-              value={formValues?.password || ""}
-              onChange={(e) => updateInput(e, "password")}
+              {...register("password", { required: true, minLength: 8 })}
             />
+            {errors.password && <span>This feels obvious...</span>}
           </div>
-          <button className="form-button" disabled={!canSubmit}>
-            Sign up
-          </button>
+          <button className="form-button">Sign up</button>
           <ErrorMessage error={error || error2} />
         </fieldset>
       </form>
