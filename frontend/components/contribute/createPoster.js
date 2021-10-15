@@ -98,7 +98,10 @@ export default function CreatePoster() {
   });
 
   return (
-    <div className="form-container">
+    <div>
+      <h2 className="form-title">Add poster</h2>
+      <p>All fields are required for the sake of archival purposes</p>
+
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -110,89 +113,105 @@ export default function CreatePoster() {
           resetForm();
         }}
       >
-        <fieldset>
-          <label htmlFor="image">Poster</label>
-          <input
-            required
-            type="file"
-            id="image"
-            name="image"
-            onChange={handleChange}
-          />
-          <label htmlFor="altText">Poster Description</label>
-          <input
-            name="altText"
-            id="altText"
-            type="text"
-            placeholder="The Wyld Stalyns"
-            value={inputs.altText}
-            onChange={handleChange}
-          />
-          <label htmlFor="artist">Who made this poster?</label>
-          <input
-            name="artist"
-            id="artist"
-            type="text"
-            placeholder="Jane Lane"
-            value={inputs.artist}
-            onChange={handleChange}
-          />
-          <label htmlFor="headliner">Headliner</label>
-          <input
-            name="headliner"
-            id="headliner"
-            type="text"
-            placeholder="The Wyld Stalyns"
-            value={inputs.headliner}
-            onChange={handleChange}
-          />
-          <label htmlFor="supportingActs">Supporting Act</label>
-          <p>Enter artists with commas to add multiple</p>
-          <input
-            name="supportingActs"
-            id="supportingActs"
-            type="text"
-            placeholder="Dujour"
-            value={inputs.supportingActs}
-            onChange={handleChange}
-          />
-          <label htmlFor="venue">Venue</label>
-          <input
-            name="venue"
-            id="venue"
-            type="text"
-            placeholder="Valley Bar"
-            value={inputs.venue}
-            onChange={handleChange}
-          />
-          <label htmlFor="city">City</label>
-          <input
-            name="city"
-            id="city"
-            type="text"
-            placeholder="Phoenix"
-            value={inputs.city}
-            onChange={handleChange}
-          />
-          <label htmlFor="state">State</label>
-          <input
-            name="state"
-            id="state"
-            type="text"
-            placeholder="AZ"
-            value={inputs.state}
-            onChange={handleChange}
-          />
-
-          <label htmlFor="date">Date of Show</label>
-          <DatePicker
-            name="date"
-            id="date"
-            autoComplete="none"
-            selected={showDate}
-            onChange={handleDateChange}
-          />
-
+        <fieldset className="two-column-grid">
+          <div>
+            <label htmlFor="image">Poster</label>
+            <input
+              required
+              type="file"
+              id="image"
+              name="image"
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="altText">Poster Description</label>
+            <input
+              name="altText"
+              id="altText"
+              type="text"
+              placeholder="The Wyld Stalyns"
+              value={inputs.altText}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="artist">Who made this poster?</label>
+            <input
+              name="artist"
+              id="artist"
+              type="text"
+              placeholder="Jane Lane"
+              value={inputs.artist}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="headliner">Headliner</label>
+            <input
+              name="headliner"
+              id="headliner"
+              type="text"
+              placeholder="The Wyld Stalyns"
+              value={inputs.headliner}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="supportingActs">Supporting Act</label>
+            <input
+              name="supportingActs"
+              id="supportingActs"
+              type="text"
+              placeholder="Dujour"
+              value={inputs.supportingActs}
+              onChange={handleChange}
+            />
+            <p>Enter artists with commas to add multiple</p>
+          </div>
+          <div>
+            <label htmlFor="venue">Venue</label>
+            <input
+              name="venue"
+              id="venue"
+              type="text"
+              placeholder="Valley Bar"
+              value={inputs.venue}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="city">City</label>
+            <input
+              name="city"
+              id="city"
+              type="text"
+              placeholder="Phoenix"
+              value={inputs.city}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="state">State</label>
+            <input
+              name="state"
+              id="state"
+              type="text"
+              placeholder="AZ"
+              value={inputs.state}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="date">Date of Show</label>
+            <DatePicker
+              name="date"
+              id="date"
+              autoComplete="none"
+              selected={showDate}
+              onChange={handleDateChange}
+            />
+          </div>
           <button>Add Show</button>
         </fieldset>
       </form>

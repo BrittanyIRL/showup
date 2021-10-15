@@ -1,12 +1,6 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export const ALL_POSTERS_QUERY = gql`
   query ALL_POSTERS_QUERY {
@@ -16,6 +10,7 @@ export const ALL_POSTERS_QUERY = gql`
       supportingActs
       venue
       date
+      city
       image {
         id
         image {
@@ -27,23 +22,41 @@ export const ALL_POSTERS_QUERY = gql`
 `;
 
 export default function Posters() {
-  const { data, error, loading } = useQuery(ALL_POSTERS_QUERY);
+  const [filterCity, setFilterCity] = useState(undefined);
+  const { data, error, loading } = useQuery(ALL_POSTERS_QUERY, {
+    variables: {
+      city: filterCity,
+    },
+  });
   const gridRef = useRef();
   const gridItems = useRef({});
-  const itemCount = Object.values(gridItems?.current).length;
-  const [isGridLoaded, setIsGridLoaded] = useState(false);
+  const availableCities = useMemo(() => {
+    return [...new Set(data?.allPosters)]
+      .reduce((prevVal, { city = "" }) => {
+        console.log(prevVal, city);
+        if (prevVal?.indexOf(city.toLowerCase()) === -1) {
+          return [...prevVal, city.toLowerCase()];
+        } else {
+          return prevVal;
+        }
+      }, [])
+      .sort((a, b) => {
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+      });
+  }, [data]);
 
-  const resizeGridItem = useCallback((item) => {
-    if (!gridRef.current) {
-      return;
-    }
+  const resizeGridItem = useCallback(({ item, container }) => {
+    console.log(window, container);
     const rowHeight = parseInt(
-      window
-        ?.getComputedStyle(gridRef?.current)
-        .getPropertyValue("grid-auto-rows")
+      window?.getComputedStyle(container)?.getPropertyValue("grid-auto-rows")
     );
     const rowGap = parseInt(
-      window?.getComputedStyle(gridRef.current).getPropertyValue("grid-row-gap")
+      window?.getComputedStyle(container)?.getPropertyValue("grid-row-gap")
     );
     const rowSpan = Math.ceil(
       (item.querySelector(".content").getBoundingClientRect().height + rowGap) /
@@ -52,29 +65,24 @@ export default function Posters() {
     item.style.gridRowEnd = `span ${rowSpan}`;
   }, []);
 
-  const resizeGridItems = useCallback(() => {
-    if (itemCount === 0) {
-      return undefined;
-    }
-    Object.values(gridItems.current).map((item) => {
-      resizeGridItem(item);
-    });
-  }, [resizeGridItem]);
+  const resizeGridItems = useCallback(
+    ({ items, container }) => {
+      if (typeof window === "undefined" || window?.location?.pathname !== "/") {
+        return undefined;
+      }
+      Object.values(items).map((item) => {
+        resizeGridItem({ item, container });
+      });
+    },
+    [resizeGridItem]
+  );
 
   useEffect(() => {
-    if (itemCount > 0) {
-      setIsGridLoaded(true);
-    }
-  }, [itemCount, isGridLoaded]);
-
-  useEffect(() => {
-    if (isGridLoaded) {
-      resizeGridItems();
-    }
-  }, [resizeGridItems, isGridLoaded]);
-
-  useLayoutEffect(() => {
-    if (!gridRef?.current || !window) {
+    if (
+      !gridRef?.current ||
+      !gridItems?.current ||
+      typeof window === "undefined"
+    ) {
       return undefined;
     }
 
@@ -85,7 +93,10 @@ export default function Posters() {
             ? entries[entries.length - 1]
             : null;
         if (last) {
-          resizeGridItems();
+          resizeGridItems({
+            container: gridRef.current,
+            items: gridItems.current,
+          });
         }
       });
     });
@@ -102,25 +113,42 @@ export default function Posters() {
   }
 
   return (
-    <div className="main-grid" ref={gridRef}>
-      {data.allPosters.map(
-        ({ id, headliner, date, venue, supportingActs, image }) => (
-          <div
-            key={id}
-            className="grid-item"
-            ref={(element) => {
-              gridItems.current[id] = element;
-            }}
-          >
-            <img
-              className="content"
-              src={image.image.publicUrlTransformed}
-              alt={`${headliner} with ${supportingActs} at ${venue}
+    <>
+      {/* <div className="main-filters">
+        <label for="cities">Pick a city</label>
+        <select
+          name="cities"
+          id="cities"
+          onChange={(e) => {
+            setFilterCity(e.target.value);
+          }}
+        >
+          <option value="all">All</option>
+          {availableCities.map((city) => (
+            <option value={city}>{city}</option>
+          ))}
+        </select>
+      </div> */}
+      <div className="main-grid" ref={gridRef}>
+        {data.allPosters.map(
+          ({ id, headliner, date, venue, supportingActs, image }) => (
+            <div
+              key={id}
+              className="grid-item"
+              ref={(element) => {
+                gridItems.current[id] = element;
+              }}
+            >
+              <img
+                className="content"
+                src={image.image.publicUrlTransformed}
+                alt={`${headliner} with ${supportingActs} at ${venue}
         on ${date}`}
-            />
-          </div>
-        )
-      )}
-    </div>
+              />
+            </div>
+          )
+        )}
+      </div>
+    </>
   );
 }

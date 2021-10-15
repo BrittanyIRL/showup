@@ -51,7 +51,7 @@ export const ResetForm = ({ token }) => {
   console.log({ error });
   return (
     <div>
-      <h2>Reset Password</h2>{" "}
+      <h2 className="form-title">Reset Password!</h2>{" "}
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>
           <label htmlFor="email">Email</label>

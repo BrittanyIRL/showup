@@ -59,29 +59,34 @@ export const SignIn = () => {
       : undefined;
 
   return (
-    <div className="form-container">
+    <div>
       <h2 className="sr-only">Sign In</h2>
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>
-          <label htmlFor="email">Email</label>
-          <input
-            name="email"
-            id="email"
-            autoComplete="email"
-            type="text"
-            placeholder="ramona.flowers77@gmail.com"
-            value={formValues?.email || ""}
-            onChange={(e) => updateInput(e, "email")}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            name="password"
-            id="password"
-            type="password"
-            placeholder="holdontoyourbutts"
-            value={formValues?.password || ""}
-            onChange={(e) => updateInput(e, "password")}
-          />
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              name="email"
+              id="email"
+              autoComplete="email"
+              type="text"
+              placeholder="ramona.flowers77@gmail.com"
+              value={formValues?.email || ""}
+              onChange={(e) => updateInput(e, "email")}
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password</label>
+            <input
+              name="password"
+              id="password"
+              type="password"
+              placeholder="holdontoyourbutts"
+              value={formValues?.password || ""}
+              onChange={(e) => updateInput(e, "password")}
+            />
+          </div>
+
           <button>Sign in</button>
           <ErrorMessage error={error} />
         </fieldset>

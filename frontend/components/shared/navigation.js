@@ -23,13 +23,18 @@ export default function Navigation() {
 
   return (
     <nav>
+      <Link href="/" passHref>
+        <a className="headerContent" isActive={asPath === "/"}>
+          Main
+        </a>
+      </Link>
+      <Link href="/about" passHref>
+        <a className="headerContent" isActive={asPath === "/about"}>
+          About
+        </a>
+      </Link>
       {user && (
         <>
-          <Link href="/" passHref>
-            <a className="headerContent" isActive={asPath === "/"}>
-              Main
-            </a>
-          </Link>
           <Link href="/contribute" passHref>
             <a className="headerContent" isActive={asPath === "/contribute"}>
               Contributions

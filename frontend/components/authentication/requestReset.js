@@ -37,21 +37,25 @@ export const RequestReset = () => {
   }, []);
 
   return (
-    <div className="form-container">
-      <h2>Reset Password</h2>
+    <div className="full-length-rows">
+      <h2 className="form-title">Update Password</h2>
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>
-          <label htmlFor="name">Email</label>
-          <input
-            name="email"
-            id="email"
-            autoComplete="email"
-            type="text"
-            placeholder="ramona.flowers77@gmail.com"
-            value={formValues?.email || ""}
-            onChange={(e) => updateInput(e, "email")}
-          />
-          <button>Reset Password</button>
+          <div>
+            <label htmlFor="name">Email</label>
+            <input
+              name="email"
+              id="email"
+              autoComplete="email"
+              type="text"
+              placeholder="ramona.flowers77@gmail.com"
+              value={formValues?.email || ""}
+              onChange={(e) => updateInput(e, "email")}
+            />
+          </div>
+          <div>
+            <button>Reset Password</button>
+          </div>
           {data?.sendUserPasswordResetLink === null && (
             <p>Check your email for a link to finish resetting your password</p>
           )}

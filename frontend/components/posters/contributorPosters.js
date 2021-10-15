@@ -36,28 +36,33 @@ export default function ContributorPosters() {
   }
   if (!isVerified) {
     return (
-      <div className="notification-wrapper">
-        <p>
-          You're account is getting verified - just like not everyone goes
-          around town distributing posters to coffee shops and stapling them to
-          street poles, not everyone needs to be adding things to this archive.
-          <br />
-          We appreciate your interest and promise to get back to you quickly.
-          <br />
-          <br /> Please check back later or wait for an email from us!
-        </p>
+      <div className="one-column-grid">
+        <div>
+          <h2 className="title-copy">Your account is getting verified</h2>
+          <p>
+            Just like not everyone goes around town distributing posters to
+            coffee shops and stapling them to street poles, not everyone needs
+            to be adding things to this archive.
+          </p>
+          <p>
+            We appreciate your interest and promise to get back to you quickly.
+          </p>
+          <p> Please check back later or wait for an email from us!</p>
+        </div>
       </div>
     );
   }
 
   if (isVerified && data.allPosters.length === 0) {
     return (
-      <div className="notification-wrapper">
-        <p>
-          Account verified! Thanks for your patience. Your contributions will
-          show up here. Let's get started: <Link href="/add">add a poster</Link>
-          .
-        </p>
+      <div className="one-column-grid">
+        <div>
+          <h2 className="title-copy">Account Verified!</h2>
+          <p>Thanks for your patience. Your contributions will show up here.</p>
+          <p>
+            Let's get started: <Link href="/add">add a poster</Link>.
+          </p>
+        </div>
       </div>
     );
   }

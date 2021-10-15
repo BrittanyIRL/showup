@@ -55,18 +55,25 @@ html {
     font-family: 'Faustina', serif;
     color: var(--sharpie);
   }
+
+  p {
+    font-family: 'Faustina', serif;
+    line-height: 1.6;
+    padding-bottom: .5em;
+  }
   a {
     font-family: 'Sedgwick Ave Display', cursive;
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
+    border-bottom: 2px solid transparent;
   }
     a:hover {
       font-style: italic;
-      background-color: var(--neon-yellow);
+      border-bottom: 2px solid var(--neon-yellow);
     }
     a:focus-visible {
-      background-color: var(--neon-yellow);
+      border-bottom: 2px solid var(--neon-yellow);
     }
   
 
@@ -80,10 +87,10 @@ html {
     font-family: 'Rock Salt', cursive;
   }
   button:hover {
-    border-bottom: 2px solid var(--neon-green)
+    border-color: var(--neon-green)
   }
    button:focus-visible {
-      border-bottom: 2px solid var(--neon-green)
+      border-color: var(--neon-green)
     }
     button:disabled {
       color: var(--ducttape);
@@ -91,6 +98,11 @@ html {
     }
     button:disabled:hover {
       border-bottom-color: transparent;
+    }
+
+    .title-copy {
+      font-family: 'Sedgwick Ave Display', cursive;
+      font-size: 3rem;
     }
 
 /* Main layout */ 
@@ -106,15 +118,42 @@ html {
 /* Header */ 
 header {
   position: absolute;
-  top: 0;
-  left: 0;
+  display: flex;
+  flex-direction: column;
+  top: 1rem;
+  left: 1rem;
   min-height: 50px;
-  width: 150px;
   background-color: var(--sharpie);
   color: var(--white);
 }
+
+.header-base {
+  transition: width 0.1s ease-in-out, background-color 0.2s ease-in-out;
+}
+.header-expanded {
+  width: 150px;
+}
+.header-collapsed {
+  width: 80px;
+  background-color: transparent;
+
+}
+.toggle-button {
+  margin: 0;
+  padding: .5rem .5rem 0 0;
+  width: 100%;
+  text-align: center;
+}
+
+.header-expanded .toggle-button {
+  text-align: right;
+}
+.header-collapsed .toggle-button {
+  background-color: var(--sharpie);
+}
+
 nav {
-  padding: 2rem 1.5rem;
+  padding: 0 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -129,9 +168,9 @@ nav {
 }
 .signOut {
   margin-top: 2rem;
+  width: 100%;
+  text-align: left;
 }
-
-
 
 form {
   display: flex;
@@ -139,15 +178,24 @@ form {
 }
 
 input {
-  outline: 1px solid var(--ducttape);
-  background-color: var(--maskingtape);
-  padding: .25rem;
-  display: block;
+  outline: none;
+  border-bottom: 1px solid var(--ducttape);
+  background-color: transparent;
+  padding: .25em .5em;
+  display: inline-block;
   margin: .25rem 0 1rem;
+  min-width: 300px;
+  color: var(--neon-blue);
 }
 
-label {
-  display: block;
+textarea {
+  outline: none;
+  border-bottom: 1px solid var(--ducttape);
+  background-color: transparent;
+  padding: .25em .5em;
+  display: inline-block;
+  margin: .25rem 0 1rem;
+  min-width: 300px;
 }
 
 .form-button {
@@ -267,9 +315,112 @@ label {
   height: auto;
 }
 
+.main-filters {
+  position: relative;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100vw;
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: rgba(249, 253, 250, 0.5);
+  color: var(--sharpie);
+  font-family: 'Long Cang', cursive;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.main-filters select {
+  margin: 1rem 2rem;
+  border: 1px solid var(--sharpie);
+  background-color: var(--white);
+  font-family: 'Faustina', serif;
+  font-size: 1.5rem;
+}
+
+
+
 .notification-wrapper {
   min-width: 400px;
   max-width: 50vw;
   margin: 0 auto;
   padding-top: 25vh;
+}
+
+.one-column-grid {
+  max-width: 600px;
+  width: 60vw;
+  margin: 3rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+.two-column-grid {
+  max-width: 800px;
+  width: 60vw;
+  margin: 3rem auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+fieldset.two-column-grid {
+  gap: .5rem;
+}
+fieldset.two-column-grid input {
+  width: 100%;
+}
+
+.full-length-rows fieldset > div {
+  width: 100%;
+  margin-top: 1rem;
+  margin-left: 0;
+}
+
+/* forms take 2 */
+.form-title {
+  font-family: 'Rock Salt', cursive;
+  font-size: 2.6rem;
+}
+
+fieldset label {
+  font-family: 'Long Cang', cursive;
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  display: block;
+}
+
+fieldset {
+  display: flex;
+  flex-wrap: wrap;
+}
+fieldset button {
+  min-width: 150px;
+  align-self: flex-end;
+}
+
+fieldset > div {
+  margin: 0 1rem;
+}
+
+fieldset > button {
+  margin: 1rem auto;
+}
+
+.edit-image {
+  width: 600px;
+  margin-top: 3rem;
+  margin-right: 2rem;
+}
+
+.about-header {
+  font-family: 'Sedgwick Ave Display', cursive;
+  color: var(--neon-pink);
+  font-size: 3rem;
+  border-bottom: 2px solid var(--neon-blue);
+  margin-bottom: 2rem;
 }

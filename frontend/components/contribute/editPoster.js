@@ -126,7 +126,8 @@ export default function EditPoster({ id }) {
   if (loading) return <p>loading...</p>;
 
   return (
-    <div className="form-container">
+    <div>
+      <h2 className="form-title">Update poster</h2>{" "}
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -139,72 +140,87 @@ export default function EditPoster({ id }) {
           resetForm();
         }}
       >
-        <fieldset>
+        <div className="edit-image">
           <img src={data.Poster.image.image.publicUrlTransformed} />
-          <label htmlFor="artist">Poster artist</label>
-          <input
-            name="artist"
-            id="artist"
-            type="text"
-            placeholder="Jane Lane"
-            value={inputs.artist}
-            onChange={handleChange}
-          />
-          <label htmlFor="headliner">Headliner</label>
-          <input
-            name="headliner"
-            id="headliner"
-            type="text"
-            placeholder="The Wyld Stalyns"
-            value={inputs.headliner}
-            onChange={handleChange}
-          />
-          <label htmlFor="supportingActs">Supporting Act</label>
-          <p>Enter artists with commas to add multiple</p>
-          <input
-            name="supportingActs"
-            id="supportingActs"
-            type="text"
-            placeholder="Dujour"
-            value={inputs.supportingActs}
-            onChange={handleChange}
-          />
-          <label htmlFor="venue">Venue</label>
-          <input
-            name="venue"
-            id="venue"
-            type="text"
-            placeholder="Valley Bar"
-            value={inputs.venue}
-            onChange={handleChange}
-          />
-          <label htmlFor="city">City</label>
-          <input
-            name="city"
-            id="city"
-            type="text"
-            placeholder="Phoenix"
-            value={inputs.city}
-            onChange={handleChange}
-          />
-          <label htmlFor="state">State</label>
-          <input
-            name="state"
-            id="state"
-            type="text"
-            placeholder="AZ"
-            value={inputs.state}
-            onChange={handleChange}
-          />
-          <label htmlFor="date">Date of Show</label>
-          <DatePicker
-            name="date"
-            id="date"
-            autoComplete="none"
-            selected={showDate}
-            onChange={handleDateChange}
-          />
-
+        </div>
+        <fieldset>
+          <div>
+            <label htmlFor="artist">Poster artist</label>
+            <input
+              name="artist"
+              id="artist"
+              type="text"
+              placeholder="Jane Lane"
+              value={inputs.artist}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="headliner">Headliner</label>
+            <input
+              name="headliner"
+              id="headliner"
+              type="text"
+              placeholder="The Wyld Stalyns"
+              value={inputs.headliner}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="supportingActs">Supporting Act</label>
+            <input
+              name="supportingActs"
+              id="supportingActs"
+              type="text"
+              placeholder="Dujour"
+              value={inputs.supportingActs}
+              onChange={handleChange}
+            />
+            <p>Enter artists with commas to add multiple</p>
+          </div>
+          <div>
+            <label htmlFor="venue">Venue</label>
+            <input
+              name="venue"
+              id="venue"
+              type="text"
+              placeholder="Valley Bar"
+              value={inputs.venue}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="city">City</label>
+            <input
+              name="city"
+              id="city"
+              type="text"
+              placeholder="Phoenix"
+              value={inputs.city}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="state">State</label>
+            <input
+              name="state"
+              id="state"
+              type="text"
+              placeholder="AZ"
+              value={inputs.state}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="date">Date of Show</label>
+            <DatePicker
+              name="date"
+              id="date"
+              autoComplete="none"
+              selected={showDate}
+              onChange={handleDateChange}
+            />
+          </div>
           <button>Update Show</button>
         </fieldset>
       </form>

@@ -91,60 +91,70 @@ export const SignUp = () => {
       : undefined;
 
   return (
-    <div className="form-container">
-      <h2>Sign Up</h2>{" "}
+    <div>
+      <h2 className="form-title">Sign Up</h2>{" "}
       <form method="POST" onSubmit={handleSubmit}>
         <fieldset>
-          <label htmlFor="reason">What brings you here to contribute?</label>
-          <textarea
-            name="reason"
-            id="reason"
-            rows="5"
-            placeholder="Are you an artist or band member? Member of a street team or work at a venue? Basically, convince me you aren't a bot or a troll."
-            value={formValues?.reason || ""}
-            onChange={(e) => updateInput(e, "reason")}
-          />
-          <label htmlFor="affiliation">
-            If you're affiliated with a label, band, company, etc - please list
-            it here.
-          </label>
-          <input
-            name="affiliation"
-            id="affiliation"
-            type="text"
-            placeholder="Wyld Stalyns Street Team"
-            value={formValues?.affiliation || ""}
-            onChange={(e) => updateInput(e, "affiliation")}
-          />
-          <label htmlFor="name">Name</label>
-          <input
-            name="name"
-            id="name"
-            autoComplete="name"
-            type="text"
-            placeholder="Ramona Flowers"
-            value={formValues?.name || ""}
-            onChange={(e) => updateInput(e, "name")}
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            name="email"
-            id="email"
-            autoComplete="email"
-            type="text"
-            placeholder="ramona.flowers77@gmail.com"
-            value={formValues?.email || ""}
-            onChange={(e) => updateInput(e, "email")}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            name="password"
-            id="password"
-            type="password"
-            placeholder="holdontoyourbutts"
-            value={formValues?.password || ""}
-            onChange={(e) => updateInput(e, "password")}
-          />
+          <div>
+            <label htmlFor="reason">What brings you here to contribute?</label>
+            <textarea
+              name="reason"
+              id="reason"
+              rows="5"
+              placeholder="Are you an artist or band member? Member of a street team or work at a venue? Basically, convince me you aren't a bot or a troll."
+              value={formValues?.reason || ""}
+              onChange={(e) => updateInput(e, "reason")}
+            />
+          </div>
+          <div>
+            <label htmlFor="affiliation">
+              If you're affiliated with a label, band, company, etc - please
+              list it here.
+            </label>
+            <input
+              name="affiliation"
+              id="affiliation"
+              type="text"
+              placeholder="Wyld Stalyns Street Team"
+              value={formValues?.affiliation || ""}
+              onChange={(e) => updateInput(e, "affiliation")}
+            />
+          </div>
+          <div>
+            <label htmlFor="name">Name</label>
+            <input
+              name="name"
+              id="name"
+              autoComplete="name"
+              type="text"
+              placeholder="Ramona Flowers"
+              value={formValues?.name || ""}
+              onChange={(e) => updateInput(e, "name")}
+            />
+          </div>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              name="email"
+              id="email"
+              autoComplete="email"
+              type="text"
+              placeholder="ramona.flowers77@gmail.com"
+              value={formValues?.email || ""}
+              onChange={(e) => updateInput(e, "email")}
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password</label>
+            <input
+              name="password"
+              id="password"
+              type="password"
+              placeholder="holdontoyourbutts"
+              value={formValues?.password || ""}
+              onChange={(e) => updateInput(e, "password")}
+            />
+          </div>
           <button className="form-button" disabled={!canSubmit}>
             Sign up
           </button>
