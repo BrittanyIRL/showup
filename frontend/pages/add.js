@@ -1,9 +1,15 @@
+import Head from "next/head";
 import { CreatePoster as _CreatePoster } from "../components";
 
 export default function CreatePoster() {
   return (
-    <div className="one-column-grid">
-      <_CreatePoster />
-    </div>
+    <>
+      <Head>
+        <title>Add a poster</title>
+      </Head>
+      <div className="one-column-grid">
+        <_CreatePoster />
+      </div>
+    </>
   );
 }

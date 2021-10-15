@@ -20,6 +20,12 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Faustina&family=Long+Cang&family=Rock+Salt&family=Sedgwick+Ave+Display&display=swap"
             rel="stylesheet"
           />
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+
+          <title>Showup</title>
         </Head>
 
         <body>
