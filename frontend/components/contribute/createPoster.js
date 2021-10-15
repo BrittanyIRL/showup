@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import gql from "graphql-tag";
 
 import Router from "next/router";
-import useForm from "../hooks/useForm";
+import { useForm } from "react-hook-form";
 import { useUser } from "../authentication";
 import { ALL_POSTERS_QUERY } from "../posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
@@ -39,63 +39,67 @@ const CREATE_POSTER_MUTATION = gql`
       }
     ) {
       id
-      headliner
-      venue
-      creator
-      createdDate
-      city
-      state
-      date
-      supportingActs
-      # image
-      # altText
     }
   }
 `;
 
 export default function CreatePoster() {
   const { user } = useUser();
-  const timestamp = format(new Date(), "yyyy-MM-dd");
   const [showDate, setShowDate] = useState(null);
-  const { inputs, handleChange, resetForm } = useForm({
-    image: "",
-    altText: "",
-    artist: "",
-    headliner: "",
-    supportingActs: "",
-    venue: "",
-    city: "",
-    state: "",
-    createdDate: timestamp,
-  });
+  const [showPoster, setShowPoster] = useState(null);
+  const [customErrors, setCustomErrors] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = useCallback(
+    async (data) => {
+      const timestamp = format(new Date(), "yyyy-MM-dd");
+      if (!showDate) {
+        setCustomErrors((existing) => ({
+          ...existing,
+          showDate: "Please add a valid date",
+        }));
+      }
+      if (!showPoster) {
+        setCustomErrors((existing) => ({
+          ...existing,
+          showPoster: "Please add an image for your poster",
+        }));
+      }
+      if (!showDate || !showPoster) {
+        return;
+      }
+
+      const posterData = {
+        ...data,
+        date: showDate.toString(),
+        creator: user?.id,
+        image: showPoster,
+        createdDate: timestamp,
+      };
+      await createPoster({ variables: { ...posterData } });
+      Router.push({
+        pathname: `/contribute`,
+      });
+    },
+    [showDate, showPoster, Router, createPoster]
+  );
+
+  const handleFileChange = useCallback(({ target }) => {
+    setShowPoster(target.files[0]);
+    setCustomErrors((existing) => ({ ...existing, showPoster: undefined }));
+  }, []);
 
   const handleDateChange = useCallback((date) => {
     setShowDate(date);
+    setCustomErrors((existing) => ({ ...existing, showDate: undefined }));
   }, []);
 
   const [createPoster] = useMutation(CREATE_POSTER_MUTATION, {
-    variables: {
-      ...inputs,
-      date: showDate?.toString(),
-      creator: user?.id,
-    },
     refetchQueries: [{ query: CONTRIBUTOR_POSTERS_QUERY, ALL_POSTERS_QUERY }],
-    update(cache, { data: { createPoster } }) {
-      try {
-        const { allPosters } = cache.readQuery({
-          query: CONTRIBUTOR_POSTERS_QUERY,
-          variables: { userId: user.id },
-        });
-
-        cache.writeQuery({
-          query: CONTRIBUTOR_POSTERS_QUERY,
-          data: { allPosters: [...allPosters, createPoster] },
-          variables: { userId: user.id },
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    },
   });
 
   return (
@@ -103,105 +107,89 @@ export default function CreatePoster() {
       <h2 className="form-title">Add poster</h2>
       <p>All fields are required for the sake of archival purposes</p>
 
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          await createPoster();
-          Router.push({
-            pathname: `/contribute`,
-          });
-
-          resetForm();
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="two-column-grid">
           <div>
             <label htmlFor="image">Poster</label>
             <input
-              required
               type="file"
               id="image"
               name="image"
-              onChange={handleChange}
+              onChange={handleFileChange}
             />
+            {customErrors.showPoster && <span>{customErrors.showPoster}</span>}
           </div>
           <div>
             <label htmlFor="altText">Poster Description</label>
             <input
-              name="altText"
-              id="altText"
-              type="text"
-              placeholder="The Wyld Stalyns"
-              value={inputs.altText}
-              onChange={handleChange}
+              placeholder="The earth as viewed from the moon, there's a cow floating in a helmet."
+              {...register("altText", { required: true, minLength: 3 })}
             />
+            {errors.altText && (
+              <span>
+                A poster description is important for users who can't see the
+                poster
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="artist">Who made this poster?</label>
             <input
-              name="artist"
-              id="artist"
-              type="text"
               placeholder="Jane Lane"
-              value={inputs.artist}
-              onChange={handleChange}
+              {...register("artist", { required: true, minLength: 3 })}
             />
+            {errors.artist && <span>Gotta give credit where it's due!</span>}
           </div>
           <div>
             <label htmlFor="headliner">Headliner</label>
             <input
-              name="headliner"
-              id="headliner"
-              type="text"
               placeholder="The Wyld Stalyns"
-              value={inputs.headliner}
-              onChange={handleChange}
+              {...register("headliner", { required: true, minLength: 3 })}
             />
+            {errors.headliner && (
+              <span>This is the main act of the event.</span>
+            )}
           </div>
           <div>
             <label htmlFor="supportingActs">Supporting Act</label>
-            <input
-              name="supportingActs"
-              id="supportingActs"
-              type="text"
-              placeholder="Dujour"
-              value={inputs.supportingActs}
-              onChange={handleChange}
-            />
-            <p>Enter artists with commas to add multiple</p>
+            <input placeholder="Dujour" {...register("supportingActs")} />
+            <span>Enter artists with commas to add multiple</span>
           </div>
           <div>
             <label htmlFor="venue">Venue</label>
             <input
-              name="venue"
-              id="venue"
-              type="text"
-              placeholder="Valley Bar"
-              value={inputs.venue}
-              onChange={handleChange}
+              placeholder="Cantina"
+              {...register("venue", { required: true, minLength: 3 })}
             />
+            {errors.venue && <span>Please add the place this show is at.</span>}
           </div>
           <div>
             <label htmlFor="city">City</label>
             <input
-              name="city"
-              id="city"
-              type="text"
-              placeholder="Phoenix"
-              value={inputs.city}
-              onChange={handleChange}
+              placeholder="Mos Eisley"
+              {...register("city", { required: true, minLength: 3 })}
             />
+            {errors.city && (
+              <span>
+                Please add the city (or nearest city) this event occurs.
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="state">State</label>
             <input
-              name="state"
-              id="state"
-              type="text"
+              {...register("state", {
+                required: true,
+                minLength: 2,
+                maxLength: 2,
+              })}
               placeholder="AZ"
-              value={inputs.state}
-              onChange={handleChange}
             />
+            {errors.state && (
+              <span>
+                Please add the city (or nearest city) this event occurs.
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="date">Date of Show</label>
@@ -209,6 +197,7 @@ export default function CreatePoster() {
               value={showDate}
               handleDateChange={handleDateChange}
             />
+            {customErrors.showDate && <span>{customErrors.showDate}</span>}
           </div>
           <button>Add Show</button>
         </fieldset>
