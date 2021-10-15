@@ -2,12 +2,12 @@ import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import Router from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
 import useForm from "../hooks/useForm";
 import { ALL_POSTERS_QUERY } from "../posters/posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
 import { useUser } from "..";
 import { findAndUpdate } from "../../lib/findAndUpdate";
+import DatePickerInput from "../shared/datePickerInput";
 
 const SINGLE_POSTER_QUERY = gql`
   query SINGLE_POSTER_QUERY($id: ID!) {
@@ -213,12 +213,9 @@ export default function EditPoster({ id }) {
           </div>
           <div>
             <label htmlFor="date">Date of Show</label>
-            <DatePicker
-              name="date"
-              id="date"
-              autoComplete="none"
-              selected={showDate}
-              onChange={handleDateChange}
+            <DatePickerInput
+              value={showDate}
+              handleDateChange={handleDateChange}
             />
           </div>
           <button>Update Show</button>

@@ -2,12 +2,13 @@ import { useMutation } from "@apollo/client";
 import { useCallback, useState } from "react";
 import { format } from "date-fns";
 import gql from "graphql-tag";
-import DatePicker from "react-datepicker";
+
 import Router from "next/router";
 import useForm from "../hooks/useForm";
 import { useUser } from "../authentication";
 import { ALL_POSTERS_QUERY } from "../posters";
 import { CONTRIBUTOR_POSTERS_QUERY } from "../posters/contributorPosters";
+import DatePickerInput from "../shared/datePickerInput";
 
 const CREATE_POSTER_MUTATION = gql`
   mutation CREATE_POSTER_MUTATION(
@@ -204,12 +205,9 @@ export default function CreatePoster() {
           </div>
           <div>
             <label htmlFor="date">Date of Show</label>
-            <DatePicker
-              name="date"
-              id="date"
-              autoComplete="none"
-              selected={showDate}
-              onChange={handleDateChange}
+            <DatePickerInput
+              value={showDate}
+              handleDateChange={handleDateChange}
             />
           </div>
           <button>Add Show</button>

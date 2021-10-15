@@ -4,13 +4,13 @@ export default function About() {
       <div>
         <h2 className="about-header">About This Project</h2>
         <p>
-          Over the last 15 I've lived in 3 major cities, throughout that time a
-          key way for me to find out what shows were coming through was by just
-          walking around and seeing posters bands and street teams would put up
-          for events. When I started learning to make apps I thought it would be
-          cool to archive this art instead of being destroyed. Like everyone, I
-          got busy with my actual career and this project got sidelined for long
-          enough.
+          Over the last 15 years I've lived in 3 major cities, throughout that
+          time a key way for me to find out what shows were coming through was
+          by just walking around and seeing posters bands and street teams would
+          put up for events. When I started learning to make apps I thought it
+          would be cool to archive this art instead of being destroyed. Like
+          everyone, I got busy with my actual career and this project got
+          sidelined for long enough.
         </p>
         <p>
           So now we're here. This is Show Up! I invite you to add in your own

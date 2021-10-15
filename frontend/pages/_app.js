@@ -4,8 +4,8 @@ import Router from "next/router";
 import { Page } from "../components";
 // import "../components/styles/nprogress.css";
 import withData from "../lib/withData";
+import "react-day-picker/lib/style.css";
 import "../styles/index.css";
-import "react-datepicker/dist/react-datepicker.css";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
